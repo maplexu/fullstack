@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>翻书效果</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    ul, li{
+      list-style: none;
+    }
+    .box{
+      width: 600px;
+      height: 400px;
+      margin: 100px auto 0;
+      position: relative;
+      transform-style: preserve-3d;
+      transform: perspective(700px) rotateX(30deg);
+    }
+    .box .page{
+      position: absolute;
+      top: 0;
+      width: 298px;
+      height: 398px;
+      border: 1px solid black;
+      background: white;
+    }
+    .page1{
+      left: 0;
+    }
+    .page2{
+      transform: translateZ(1px);
+    }
+    .page3{
+      transform: translateZ(-1px) scaleX(-1);
+    }
+    .page4{
+      right: 0;
+    }
+    .child{
+      width: 300px;
+      height: 400px;
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform-style: preserve-3d;
+      transform-origin: left;
+      transition: all 1s ease;
+      transform: rotateY(0deg);
+    }
+    .box:active .child{
+      transform: rotateY(-180deg);
+    }
+  </style>
+</head>
+<body>
+  <ul class="box">
+    <li class="page page1">
+      这里是第一张第二页的内容
+    </li>
+    <li class="child">
+      <div class="page page2">
+        这里是第二张第一页的内容
+      </div>
+      <div class="page page3">
+        这里是第二张第二页的内容
+      </div>
+    </li>
+    <li class="page page4">
+      这里是第三张第一页的内容
+    </li>
+  </ul>
+</body>
+</html>

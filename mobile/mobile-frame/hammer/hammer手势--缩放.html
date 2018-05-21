@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>hammer手势--缩放</title>
+  <script src="./hammer.js" charset="utf-8"></script>
+  <style>
+    .box{
+      width: 200px;
+      height: 200px;
+      background: #ccc;
+      margin: 100px auto 0;
+      transform: scale(1);
+    }
+  </style>
+</head>
+<body>
+  <div class="box"></div>
+
+  <script>
+    window.onload = function(){
+      var oBox = document.querySelector('.box');
+      var scale = 1, old_scale;
+
+      var hammer = new Hammer(oBox);
+
+      hammer.get('pinch').set({enable: true});
+      hammer.on('pinchstart', function(ev){
+        old_scale = scale;
+      })
+      hammer.on('pinchmove', function(ev){
+        scale = old_scale* ev.scale;
+
+        oBox.style.transform = `scale(${scale})`;
+      })
+      hammer.on('pinchend', function(ev){})
+    }
+  </script>
+</body>
+</html>

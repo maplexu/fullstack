@@ -1,0 +1,7 @@
+{
+  "name": "",
+  "version": "",
+  "devDependencies": {
+    "jsdom": "^11.8.0"
+  }
+}

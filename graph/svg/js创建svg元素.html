@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <button id="btn1">按钮</button>
+
+  <script>
+  window.onload = function(){
+    let oBtn = document.getElementById('btn1');
+    let oSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+
+    oSvg.setAttribute('width', 800);
+    oSvg.setAttribute('height', 800);
+
+    document.body.appendChild(oSvg);
+
+    oBtn.onclick = function(){
+      let oL = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+
+      oL.setAttribute('x1', 100);
+      oL.setAttribute('y1', 100);
+      oL.setAttribute('x2', 400);
+      oL.setAttribute('y2', 300);
+
+      oL.style.stroke = 'red';
+
+      oSvg.appendChild(oL);
+    }
+  }
+  </script>
+</body>
+</html>

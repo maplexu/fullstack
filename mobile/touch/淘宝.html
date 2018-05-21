@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>淘宝网</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    html{
+      font-size: 10px;
+    }
+    header{
+      width: 48rem;
+      height: 5.5rem;
+      background: #fe5400;
+      overflow: hidden;
+      position: relative;
+      z-index: 99;
+    }
+    header h1{
+      width: 4.4rem;
+      height: 3.7rem;
+      margin-top: 1rem;
+      margin-left: 0.6rem;
+      background: url(img/logo.png) no-repeat;
+      background-size: 100% 100%;
+      text-indent: -9999rem;
+    }
+    /* load */
+    .load{
+      width: 48rem;
+      height: 5rem;
+      line-height: 5rem;
+      text-align: center;
+      font-size: 2rem;
+    }
+    /* page-content */
+    .page_content{
+      background: white;
+      position: relative;
+      top: -5rem;
+    }
+    /* banner */
+    .banner{
+      width: 48rem;
+      height: 15rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .banner ul{
+      /* 这里设置ul的宽度尽可能的大，就能容纳所有的li了 */
+      width: 999rem;
+      height: 15rem;
+      overflow: hidden;
+      transform: translateX(-48rem);
+    }
+    .banner ul li{
+      width: 48rem;
+      height: 15rem;
+      float: left;
+      font-size: 30px;
+      text-align: center;
+    }
+    .banner ul li img{
+      width: 100%;
+      height: 100%;
+    }
+    .banner ol {
+      position: absolute;
+      right: 0;
+      bottom: 1.3rem;
+    }
+    .banner ol li {
+      float: left;
+      width: 1rem;
+      height: 1rem;
+      border: 1px solid #333;
+      margin: 0 0.4rem;
+      border-radius: 50%;
+      background: white;
+      opacity: 0.6;
+    }
+    .banner ol li.active{
+      background: #ff5501;
+      border: 1px solid #d0a793;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>淘宝网</h1>
+  </header>
+  <div class="load">
+    下拉刷新
+  </div>
+  <!-- page-content是一个专门的容器，用于上下滑动时拖动内容 -->
+  <div class="page_content">
+    <section class="banner">
+      <ul>
+        <li><img src="img/banner1.jpg" alt="" /></li>
+        <li><img src="img/banner2.jpg" alt="" /></li>
+        <li><img src="img/banner1.jpg" alt="" /></li>
+        <li><img src="img/banner2.jpg" alt="" /></li>
+        <li><img src="img/banner1.jpg" alt="" /></li>
+        <li><img src="img/banner2.jpg" alt="" /></li>
+      </ul>
+      <ol>
+        <li class="active"></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ol>
+    </section>
+  </div>
+
+
+  <script>
+    window.onresize = function(){
+      console.log(document.documentElement.clientWidth);
+      document.documentElement.style.fontSize = document.documentElement.clientWidth/48 + 'px';
+    }
+    window.onresize();
+
+    window.onload = function(){
+      let oBanner = document.querySelector('.banner');
+      let oBannerUl = oBanner.children[0];
+      let oBannerUlLi = oBannerUl.children;
+      let oOlLi = document.querySelectorAll('.banner ol li');
+      let oPageContent = document.querySelector('.page_content');
+      let oLoad = document.querySelector('.load');
+
+      //给轮播图添加前一张和最后一张图片
+      oBannerUl.appendChild(oBannerUlLi[0].cloneNode(true));
+      oBannerUl.insertBefore(oBannerUlLi[oBannerUlLi.length-2].cloneNode(true), oBannerUlLi[0]);
+
+      let x=-oBannerUlLi[0].offsetWidth,y=0;
+
+      oBanner.addEventListener('touchstart', function(ev){
+
+        oPageContent.style.transition = 'none';
+        oBannerUl.style.transition = 'none';
+
+        //获取初始触摸位置
+        let startX = ev.targetTouches[0].clientX;
+        let startY = ev.targetTouches[0].clientY;
+
+        //获取元素与触摸点的相对距离
+        let distX = startX - x;
+        let distY = startY - y;
+
+        //定义滑动方向
+        let dir = '';
+
+        function fnMove(ev){
+          if(dir == ''){
+            //等待方向判定
+            if(Math.abs(ev.targetTouches[0].clientX - startX) >= 5){
+              dir = 'x';
+            }else if(Math.abs(ev.targetTouches[0].clientY - startY) >= 5){
+              dir = 'y';
+            }
+          }else{
+            if(dir == 'x'){
+              x = ev.targetTouches[0].clientX - distX;
+              oBannerUl.style.transform = `translateX(${x}px)`;
+            }else{
+              y = ev.targetTouches[0].clientY - distY;
+
+              //判断是向上滑动还是向下滑动：
+              if(y>0){
+                //下滑就模拟一个拖拽的力，使得下滑的幅度变小
+                oPageContent.style.transform = `translateY(${y/3}px)`;
+                if(y>200){
+                //如果向下滑动的距离超过200px，就执行额外的操作
+                //...
+                }
+              }else{
+                oPageContent.style.transform = `translateY(${y}px)`;
+              }
+            }
+          }
+        }
+
+        function fnEnd(){
+          oBanner.removeEventListener('touchmove', fnMove, false);
+          oBanner.removeEventListener('touchend', fnEnd, false);
+
+
+          if(dir == 'y'){
+            if(y>0){
+              y = 0;
+              oPageContent.style.transition = '0.3s all ease';
+              oPageContent.style.transform = `translateY(0px)`;
+            }
+          }else if(dir == 'x'){
+            //在横向滑动结束时判断是否切换轮播图中的图片：
+            let n = Math.round(-x/oBannerUl.children[0].offsetWidth);
+            x = -n*oBannerUl.children[0].offsetWidth;
+
+
+            oBannerUl.style.transition = 'all 0.3s ease';
+            oBannerUl.style.transform = `translateX(${x}px)`;
+
+            /* 显示轮播图中的小圆按钮的状态 */
+            Array.from(oOlLi).forEach((li, index) => {
+              if(n == 7){
+                li.className = index == 0 ? 'active' : '';
+              }else if(n == 0){
+                li.className = index == 5 ? 'active' : '';
+              }else{
+                li.className = index == n-1 ? 'active' : '';
+              }
+            })
+
+            //当滑到最后一张时，就跳转到当前列表中的第二张
+            if(n == 7){
+              setTimeout(function(){
+                oBannerUl.style.transition = 'none';
+                oBannerUl.style.transform = `translateX(-48rem)`;
+                x = -oBannerUlLi[0].offsetWidth;
+              }, 310)
+            }
+            //当滑动到第一张时，就跳转到当前列表中的倒数第二张
+            if(n == 0){
+              setTimeout(function(){
+                oBannerUl.style.transition = 'none';
+                oBannerUl.style.transform = `translateX(-288rem)`;
+                x = -6*oBannerUlLi[0].offsetWidth;
+              }, 310);
+            }
+          }
+        }
+
+        oBanner.addEventListener('touchmove', fnMove, false);
+        oBanner.addEventListener('touchend', fnEnd, false);
+      }, false)
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    body{
+      height: 2000px;
+    }
+    .box{
+      width: 200px;
+      height: 200px;
+      background: #ccc;
+      border: 1px solid black;
+      position: absolute;
+      top: 150px;
+      left: 50%;
+      margin-left: -100px;
+      line-height: 200px;
+      text-align: center;
+      font-size: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="content">xzxcz</div>
+  <div class="box"></div>
+
+  <script>
+    function calcDistance(touch1, touch2){
+      return Math.sqrt(Math.pow(touch1.clientX-touch2.clientX, 2), Math.pow(touch1.clientY-touch2.clientY, 2));
+    }
+
+    window.onload = function(){
+      var oBox = document.getElementsByClassName('box')[0];
+      var oContent = document.getElementsByClassName('content')[0];
+
+      var dis1, dis2;
+      var scale = 1.0, old_scale;
+
+
+      document.addEventListener('touchstart', function(ev){
+        oContent.innerHTML = ev.targetTouches.length;
+        oBox.style.background = 'red';
+
+        if(ev.targetTouches.length >= 2){
+          dis1 = calcDistance(ev.targetTouches[0], ev.targetTouches[1]);
+          oContent.innerHTML = dis1;
+          old_scale = scale;
+        }
+      }, false)
+
+      document.addEventListener('touchmove', function(ev){
+        if(ev.targetTouches.length >= 2){
+          dis2 = calcDistance(ev.targetTouches[0], ev.targetTouches[1]);
+
+          scale = old_scale*dis2/dis1;
+
+          oBox.style.transform = `scale(${scale})`;
+        }
+      }, false)
+
+      document.addEventListener('touchend', function(){
+        oContent.innerHTML = 0;
+      }, false)
+    }
+  </script>
+</body>
+</html>

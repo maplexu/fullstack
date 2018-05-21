@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="d3.js" charset="utf-8"></script>
+    <script>
+    window.onload=function (){
+      let oC=document.getElementById('c1');
+      let gd=oC.getContext('2d');
+      let W=oC.width,H=oC.height;
+
+      //
+      let nodes=[
+        {name: 'china', title: '全国'},
+        {name: 'sd', title: '山东'},
+        {name: 'sd-jn', title: '济南'},
+        {name: 'sd-ly', title: '临沂'},
+        {name: 'sd-dz', title: '德州'},
+        {name: 'hn', title: '湖南'},
+        {name: 'hn-cs', title: '长沙'},
+        {name: 'hn-ld', title: '娄底'},
+        {name: 'bj', title: '北京'},
+      ];
+
+      let links=[
+        {source: 'sd', target: 'china', dis: 400},
+        {source: 'sd-jn', target: 'sd', dis: 50},
+        {source: 'sd-ly', target: 'sd', dis: 50},
+        {source: 'sd-dz', target: 'sd', dis: 50},
+        {source: 'hn', target: 'china', dis: 400},
+        {source: 'hn-cs', target: 'hn', dis: 50},
+        {source: 'hn-ld', target: 'hn', dis: 50},
+        {source: 'bj', target: 'china', dis: 400},
+      ];
+
+      //
+      let link=d3.forceLink(links)
+        .id(node=>node.name)
+        .distance(link=>link.dis);
+
+      let sim=d3.forceSimulation()
+        .nodes(nodes)
+        .force('link', link)
+        .force('charge', d3.forceManyBody())
+        .force('center', d3.forceCenter(W/2, H/2));
+
+      sim.on('tick', ()=>{
+        //console.log(nodes.map(json=>[json.x, json.y].join(' ')));
+
+        gd.clearRect(0,0,W,H);
+
+        //画点
+        nodes.forEach(node=>{
+          gd.beginPath();
+          gd.arc(node.x, node.y, 4, 0, Math.PI*2, true);
+          gd.fill();
+
+          gd.font='20px 宋体';
+          gd.fillText(node.title, node.x, node.y);
+        });
+
+        //画线
+        links.forEach(link=>{
+          gd.beginPath();
+          gd.moveTo(link.source.x, link.source.y);
+          gd.lineTo(link.target.x, link.target.y);
+          gd.stroke();
+        });
+      });
+    };
+    </script>
+  </head>
+  <body>
+    <canvas id="c1" width="800" height="600"></canvas>
+  </body>
+</html>

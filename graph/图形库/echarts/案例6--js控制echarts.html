@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>js控制echarts</title>
+  <script src="./echarts.js" charset="utf-8"></script>
+
+  <style>
+    .box{
+      width: 1000px;
+      height: 600px;
+      border: 1px solid #ccc;
+      margin: 10px auto 0;
+    }
+    .box .left, .box .right{
+      width: 50%;
+      height: 100%;
+      float: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="left"></div>
+    <div class="right"></div>
+  </div>
+
+  <script>
+    let $ = document.querySelectorAll.bind(document);
+    window.onload = function(){
+      let oLeft = $('.left')[0];
+      let oRight = $('.right')[0];
+
+      let datas = [
+        {
+          name: '湖南',
+          value: 1675,
+          citys: [
+            {name: '长沙', value: 816},
+            {name: '潭州', value: 435},
+            {name: '桃园', value: 424},
+          ]
+        },
+        {
+          name: '山东',
+          value: 1354,
+          citys: [
+            {name: '济南', value: 615},
+            {name: '临沂', value: 443},
+            {name: '德州', value: 296},
+          ]
+        },
+        {
+          name: '东北',
+          value: 374,
+          citys: [
+            {name: '黑龙江', value: 112},
+            {name: '牡丹江', value: 65},
+            {name: '漠河', value: 197},
+          ]
+        }
+      ]
+
+      //1.左边图表----省份：
+      let option1 = {
+        title: {
+          text: '省份数据'
+        },
+        series: [
+          {
+            type: 'pie',
+            name: '省份数据',
+            data: datas.map(json =>({name: json.name, value: json.value}))
+          }
+        ]
+      }
+      let chart1 = echarts.init(oLeft);
+      chart1.setOption(option1);
+      chart1.on('mouseover', function(ev){
+        console.log(ev);
+        setCity(ev.name);
+      })
+
+      let chart2 = echarts.init(oRight);
+
+      //初始时刻显示第一个省下面的市
+      setCity(datas[0].name);
+      function setCity(name){
+        console.log(name);
+        let data = null;
+
+        datas.forEach(json => {
+          if(json.name == name){
+            data = json.citys;
+          }
+        })
+
+        let option = {
+          title: {
+            text: '各市数据'
+          },
+          series: [
+            {
+              type: 'pie',
+              name: '各市数据',
+              data: data
+            }
+          ]
+        }
+
+        chart2.setOption(option);
+      }
+
+
+
+
+
+    }
+  </script>
+</body>
+</html>

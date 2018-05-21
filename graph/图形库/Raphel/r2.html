@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./raphael.js" charset="utf-8"></script>
+</head>
+<body>
+  <script>
+    window.onload = function(){
+      var page = Raphael(0, 0, 800, 600);
+
+      var path = page.path('M 100 100 L 200 100 M 100 120 L 200 120 M 100 140 L 200 140').attr('stroke-width', 10);
+
+      path.click(function(){
+        path.animate({path: 'M 100 100 L 200 140 M 150 120 L 150 120 M 100 140 L 200 100'}, 1000, 'bounce');
+      })
+    }
+  </script>
+</body>
+</html>

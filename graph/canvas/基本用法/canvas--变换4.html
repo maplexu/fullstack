@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    body{
+      background: green;
+      text-align: center;
+    }
+    #c1{
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+    <canvas id="c1" width="800" height="600"></canvas>
+
+  <script>
+    window.onload = function(){
+      var oC = document.getElementById('c1');
+      var gd = oC.getContext('2d');
+
+      let g1 = { l: 100, t: 100, w: 200, h: 150, r: 0};
+      let g2 = { l: 50, t: 80, w: 100, h: 350, r: 0 };
+
+      requestAnimationFrame(next);
+
+      function next(){
+        gd.clearRect(0, 0, oC.width, oC.height);
+
+
+        g1.r++;
+        gd.save();
+        gd.translate(g1.w/2 + g1.l, g1.h/2 + g1.t);
+        gd.rotate(g1.r*Math.PI/180);
+        gd.strokeRect(-g1.w/2, -g1.h/2, g1.w, g1.h);
+        gd.fillStyle = 'green';
+        gd.fillRect(0, 0, oC.width, oC.height);
+        gd.restore();
+
+        g2.r--;
+        gd.save();
+        gd.translate(g2.w/2 + g2.l, g2.h/2 + g2.t);
+        gd.rotate(g2.r*Math.PI/180);
+        gd.strokeRect(-g2.w/2, -g2.h/2, g2.w, g2.h);
+
+        gd.beginPath();
+        gd.fillStyle = 'pink';
+        gd.fillRect(0, 0, oC.width, oC.height);
+        gd.restore();
+
+        gd.save();
+        gd.fillRect(300, 300, 100, 100);
+        gd.restore();
+
+        requestAnimationFrame(next);
+      }
+    }
+  </script>
+</body>
+</html>

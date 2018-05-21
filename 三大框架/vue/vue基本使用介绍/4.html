@@ -1,0 +1,32 @@
+<!-- 4.绑定标签的style属性 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./vue.js"></script>
+  <script>
+    window.onload = function(){
+      let vm = new Vue({
+        el: '#div1',    //该vue实例的作用范围
+        data: {
+          styleJson: {
+            color: '',
+            display: 'block',
+            width: '300px',
+            'font-size': '40px'
+          }
+        }
+      })
+    }
+  </script>
+</head>
+<body>
+  <div id="div1">
+    <input type="text" v-model="styleJson.color">
+    <span :style="styleJson">span标签</span>
+  </div>
+</body>
+</html>

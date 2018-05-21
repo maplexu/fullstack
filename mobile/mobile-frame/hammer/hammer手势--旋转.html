@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>hammer手势--旋转</title>
+  <script src="./hammer.js" charset="utf-8"></script>
+  <style>
+    .box{
+      width: 200px;
+      height: 200px;
+      background: #ccc;
+      margin: 100px auto 0;
+      transform: rotate(0deg);
+      line-height: 200px;
+      text-align: center;
+      font-size: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="box"></div>
+
+  <script>
+    window.onload = function(){
+      var oBox = document.querySelector('.box');
+      var deg = 0, old_deg;
+
+      var hammer = new Hammer(oBox);
+
+      hammer.get('rotate').set({enable: true});
+      hammer.on('rotatestart', function(ev){
+        old_deg = deg;
+      });
+      hammer.on('rotatemove', function(ev){
+        deg = old_deg + ev.rotation;
+        oBox.style.transform = `rotate(${deg}deg)`;
+      })
+      hammer.on('rotateend', function(ev){})
+    }
+  </script>
+</body>
+</html>

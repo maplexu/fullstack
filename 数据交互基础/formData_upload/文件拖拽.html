@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>文件拖拽</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0
+    }
+    .box{
+      width: 400px;
+      height: 200px;
+      background: #ccc;
+      border: 1px solid #ccc;
+      line-height: 200px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin-left: -200px;
+      margin-top: -100px;
+      text-align: center;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <meter id="m1" min="0" max="100" style="width: 100%"></meter>
+  <div class="box">
+    请把文件拖到这里来
+  </div>
+
+  <script>
+    window.onload = function(){
+      let oBox = document.querySelector('.box');
+      let oM = document.querySelector('#m1');
+      let timer;
+
+      document.addEventListener('dragover', (ev) => {
+        clearTimeout(timer);
+
+        oBox.style.display = 'block';
+
+        timer = setTimeout(function(){
+          oBox.style.display = 'none';
+        }, 300);
+        ev.preventDefault();        //addEventListener方式绑定的事件只能通过e.preventDefault去阻止默认行为
+      }, false);
+
+      oBox.addEventListener('dragenter', () => {
+        oBox.innerHTML = '请松手';
+      }, false);
+      oBox.addEventListener('dragleave', () => {
+        oBox.innerHTML = '请把文件拖到这里来';
+      }, false);
+
+      oBox.addEventListener('drop', (ev) => {
+        let data = new FormData();
+
+        Array.from(ev.dataTransfer.files).forEach(file => {
+          data.append('f1', file);
+        })
+
+        let xhr = new XMLHttpRequest();
+
+        xhr.open('POST', 'http://localhost:8080/api', true);
+        xhr.upload.addEventListener('progress', ev => {
+          oM.value = 100*ev.loaded/ev.total;
+        }, false)
+        xhr.send(data);
+
+        ev.preventDefault();
+
+        xhr.onreadystatechange = function(){
+          if(xhr.readyState == 4){
+            if((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
+              console.log('成功');
+            }else{
+              console.log('失败');
+            }
+          }
+        }
+
+      }, false);
+    }
+  </script>
+</body>
+</html>

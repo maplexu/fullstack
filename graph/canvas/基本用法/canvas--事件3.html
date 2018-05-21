@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    body{
+      background: green;
+      text-align: center;
+    }
+    #c1{
+      background: #fff;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+  </style>
+</head>
+<body>
+  <div style="margin-left: 40px; position: relative;">
+    <canvas id="c1" width="800" height="600"></canvas>
+  </div>
+
+  <script>
+
+    function d2r(n){
+      return n*Math.PI/180;
+    }
+    function r2d(n){
+      return n*180/Math.PI;
+    }
+    window.onload = function(){
+      var oC = document.getElementById('c1');
+      var gd = oC.getContext('2d');
+
+      let cx=400, cy=300, r=150;
+      gd.beginPath();
+      gd.arc(cx, cy, r, d2r(0), d2r(360), true);
+      gd.stroke();
+
+      oC.onmousemove = function(ev){
+        let x = ev.offsetX;
+        let y = ev.offsetY;
+        let dis = Math.sqrt(Math.pow(x-cx, 2) + Math.pow(y-cy, 2));
+
+        gd.clearRect(0, 0, oC.width, oC.height);
+
+        if(dis <= r){
+          gd.strokeStyle = 'red';
+        }else{
+          gd.strokeStyle = 'black';
+        }
+
+        gd.beginPath();
+        gd.arc(cx, cy, r, d2r(0), d2r(360), true);
+        gd.stroke();
+      }
+    }
+  </script>
+</body>
+</html>

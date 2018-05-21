@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>属性操作</title>
+</head>
+<body>
+  <svg width="800" height="600">
+    <line x1="100" y1="100" x2="300" y2="300" stroke="black" stroke-width="30" id="line1"></line>
+  </svg>
+
+  <script>
+    window.onload = function(){
+      var line1 = document.getElementById('line1');
+
+      line1.onclick = function(){
+        this.setAttribute('x1', '200');
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./raphael.js" charset="utf-8"></script>
+</head>
+<body>
+  <script>
+    window.onload = function(){
+      var page = Raphael(0, 0, 800, 800);
+
+      page.rect(100, 100, 400, 300).attr('fill', 'yellow').attr('stroke', 'red').click(function(){
+        console.log('测试raphel的事件效果');
+        this.animate({width: 200, fill: 'green', strokewidth: 20}, 2000, 'elastic');
+      })
+    }
+  </script>
+</body>
+</html>

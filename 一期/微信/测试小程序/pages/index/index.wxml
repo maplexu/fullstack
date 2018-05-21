@@ -1,0 +1,28 @@
+<!--index.wxml-->
+<view class="header">
+  <scroll-view scroll-x="{{true}}" scroll-width-animation="{{true}}">
+    <view class="container">
+      <view>
+        <view class="{{}}" wx:for="{{tags}}" wx:key="{{index}}" bindtap="fnClick" data-index="{{index}}">{{item}}         </view>
+      </view>
+      <view class="cur" style="left: {{left}}px"></view>
+    </view>
+  </scroll-view>
+</view>
+<!--  header_holder是一个占位符，用于撑开fixed布局的元素 -->
+<view class="header_holder"></view>
+<view class="video_list">
+  <view class="video_item" wx:for="{{list}}" wx:key="{{index}}">
+    <navigator url="/pages/detail/detail?id={{index}}">
+      <image class="cover" src="/res/img/1.jpg"></image>
+    </navigator>
+    <text class="title">孤寡男子丧事3天花60万请孝子花6万 村支书涉侵占</text>
+    <view class="detail">
+      <button size="mini" plain="{{true}}"><image src="/res/icon/like.svg"></image>111</button>
+      <button size="mini" plain="{{true}}"><image src="/res/icon/comment.svg"></image>222</button>
+      <button size="mini" plain="{{true}}"><image src="/res/icon/share.svg"></image></button>
+    </view>
+  </view>
+</view>
+
+<view class="footer"></view>

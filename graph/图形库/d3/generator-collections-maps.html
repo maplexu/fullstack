@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./d3.js" charset="utf-8"></script>
+</head>
+<body>
+  <script>
+    window.onload = function(){
+      let map = d3.map([
+        {name: 'blue', age: 18},
+        {name: 'alex', age: 22},
+        {name: 'tom', age: 21},
+        {name: 'jim', age: 25},
+      ], json => json.name)      //最后一个参数决定将那个参数作为key
+      console.log(map.get('alex'));
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./d3.js" charset="utf-8"></script>
+</head>
+<body>
+  <script>
+    window.onload = function(){
+      let gen = d3.format('08.3f');
+      console.log(gen(73));
+
+      let gen2 = d3.timeFormat('%Y-%m-%d');
+      let t = Date.now();
+      console.log(t);
+      console.log(gen2(t));
+    }
+  </script>
+</body>
+</html>

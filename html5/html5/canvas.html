@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="c1" width="800" height="600"></canvas>
+
+  <script>
+    window.onload = function(){
+      let oC = document.getElementById('c1');
+
+      //获取图形上下文
+      let gd = oC.getContext('2d');
+
+      //路径操作：
+
+      //起点：
+      gd.moveTo(470, 81);
+      gd.lineTo(778, 236);
+      gd.lineTo(532, 411);
+      gd.lineTo(312, 259);
+      //gd.lineTo(470, 81);
+      gd.closePath();
+
+      gd.lineWidth = 20;
+      gd.stroke();
+
+      //gd.fill();
+
+
+    }
+  </script>
+</body>
+</html>

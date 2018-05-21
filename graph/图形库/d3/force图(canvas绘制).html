@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./d3.js" charset="utf-8"></script>
+</head>
+<body>
+  <canvas id="c1" width="800" height="600"></canvas>
+
+  <script>
+    window.onload = function(){
+      let oC = document.getElementById('c1');
+      let gd = oC.getContext('2d');
+      let W = oC.width, H = oC.height;
+
+
+      //定义点集合；
+      let nodes = [
+        {name: 'aaa'},
+        {name: 'bbb'},
+        {name: 'ccc'}
+      ]
+
+      //定义线集合：
+      let links = [
+        {source: 'aaa', target: 'bbb', dis: 400},
+        {source: 'bbb', target: 'ccc', dis: 200},
+        {source: 'ccc', target: 'aaa', dis: 300}
+      ]
+
+      let link = d3.forceLink(links)
+        .id(node => node.name)            //node是nodes中的内容
+        .distance(link => link.dis);      //link是links中的内容
+
+      //定义模拟器
+      let sim = d3.forceSimulation()
+        .nodes(nodes)                   //指定点数据集合
+        .force('link', link)            //指定线数据集合
+        .force('charge', d3.forceManyBody())           //指定一个引擎，forceManyBody()是多体引擎，多个物体间有引力和斥力
+        .force('center', d3.forceCenter(W/2, H/2))     //指定图形的中心位置
+
+      //开始模拟（tick事件就是向前模拟一步，会不停的出发）
+      sim.on('tick', ()=> {
+        console.log(nodes);
+        console.log(links);
+        gd.clearRect(0, 0, W, H);
+
+        //画点：
+        nodes.forEach(node => {
+          gd.beginPath();
+          gd.arc(node.x, node.y, 4, 0, Math.PI*2, true);
+          gd.fill();
+        });
+
+        //画线：
+        links.forEach(link => {
+          gd.beginPath();
+          gd.moveTo(link.source.x, link.source.y);
+          gd.lineTo(link.target.x, link.target.y);
+          gd.stroke();
+        })
+      })
+    }
+  </script>
+</body>
+</html>

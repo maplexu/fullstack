@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    .box {
+      width: 400px;
+      height: 150px;
+      border: 1px solid black;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -75px;
+      margin-left: -200px;
+      text-align: center;
+      line-height: 150px;
+      background: #ccc;
+    }
+    .item{
+      width: 100px;
+      height: 30px;
+      line-height: 30px;
+      border: 1px solid rgb(30, 198, 139);
+      text-align: center;
+      cursor: pointer;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="box">
+    请将文件拖到这里面来
+  </div>
+  <div class="item" draggable="true">请拖我</div>
+
+  <script>
+    window.onload = function(){
+      let oBox = document.querySelector('.box');
+
+      oBox.ondragenter = function(){
+        oBox.innerHTML = "松手上传";
+      }
+      oBox.ondragleave = function(){
+        oBox.innerHTML = "请将文件拖到这里面来";
+      }
+      oBox.ondragover = function(){
+        console.log('aaa');
+
+        //不阻止默认事件的话，ondrop不会触发
+        return false;
+      }
+      oBox.ondrop = function(e){
+        oBox.innerHTML = "请将文件拖到这里面来";
+        let data = new FormData();
+
+        Array.from(e.dataTransfer.files).forEach(file => {
+          data.append('f1', file);
+        })
+
+        let xhr = new XMLHttpRequest();
+
+        xhr.open('POST', 'http://localhost:8080/api', true);
+        xhr.send(data);
+
+        xhr.onreadystatechange = function(){
+          if(xhr.readyState == 4){
+            if((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
+              alert('成功：' + xhr.responseText);
+            }else{
+              alert('失败');
+            }
+          }
+        }
+
+        //不阻止默认事件的话，若拖动的是一个文件的话，就会在松手后，在浏览器中直接打开该文件
+        return false;
+      }
+    }
+  </script>
+</body>
+</html>

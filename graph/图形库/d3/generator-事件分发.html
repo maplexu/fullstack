@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./d3.js" charset="utf-8"></script>
+</head>
+<body>
+  <script>
+    window.onload = function(){
+      let ev = d3.dispatch('msg', 'xxx');
+      ev.on('msg', (a, b, c) => {
+        console.log('事件被触发了', a, b, c);
+      });
+      ev.call('msg', 5, 1, 2, 3);
+    }
+  </script>
+</body>
+</html>

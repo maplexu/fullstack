@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./iscroll-probe.js" charset="utf-8"></script>
+  <script src="./jquery.js"></script>
+  <style>
+    .parent{
+      width: 300px;
+      height: 400px;
+      border: 1px solid black;
+      margin: 50px auto 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .parent .child{
+      width: 300px;
+      background: #fff;
+      position: relative;
+      z-index: 999;
+      overflow: hidden;
+    }
+    .parent .dropdown{
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      text-align: center;
+      line-height: 40px;
+    }
+    .parent .loadmore{
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      line-height: 40px;
+    }
+  </style>
+
+</head>
+<body>
+  <div class="parent">
+    <div class="child">
+      <p>2018年3月8日，鲁检君跟随山东省人民检察院公诉二处检察官程才和汤宁，前往“德州大学生遇害案”二审上诉庭审的现场，为您还原案件真相，揭秘背后的故事。</p>
+      <p>案发</p>
+      <p>2016年10月25日晚，德州市民的朋友圈里疯传着一段视频，视频显示，在一片混乱中，两名年轻男子浑身是血、不省人事，被先后抬上救护车。据当时网友爆料，这是发生在德州某高校商业街的一起伤人事件，受伤的是两名20岁左右的大二学生，送医后经抢救无效死亡。</p>
+      <p>大学城内？年轻男子？杀人事件？这些敏感的关键词挑动着人们的神经。一时间，学生、老师、家长人心惶惶，各种揣测四起。而找到犯罪嫌疑人，是突破案件的关键。</p>
+      <p>根据当时一位目击者捡到的一部遗落在现场的手机，警方很快锁定了犯罪嫌疑人费某亮。当晚23时许，在德州市人民医院住院部一部，犯罪嫌疑人费某亮被公安机关抓获。很快，费某亮因涉嫌犯故意杀人罪被批准逮捕。</p>
+      <p>次年3月6日，德州市人民检察院以费某亮涉嫌故意杀人罪向德州市中级人民法院提起公诉。6月22日，德州市中级人民法院作出刑事判决书，被告人费某亮犯故意杀人罪，判处死刑，剥夺政治权利终身。费某亮不服，提出上诉。</p>
+      <p>山东省检察院公诉二处的两名检察官程才和汤宁就是在此时接手此案。虽然相较其他恶性案件，本案的案情并不复杂，但青春少年，本该是人生最得意的阶段，2名20岁出头的小伙子却落得如此结果，给家人留下了无法承受的伤痛，实在让人深感痛心和惋惜。</p>
+    </div>
+    <div class="dropdown">下拉刷新</div>
+    <div class="loadmore">加载更多</div>
+  </div>
+
+  <script>
+    window.onload = function(){
+      let oDropDown = document.getElementsByClassName('dropdown')[0];
+      let oLoadMore = document.getElementsByClassName('loadmore')[0];
+      let oParent = document.getElementsByClassName('parent')[0];
+      let oChild = document.getElementsByClassName('child')[0];
+
+      let scroll = new IScroll('.parent', {
+        scrollY: true,
+        probeType: 3,
+        disablePointer: true,
+        disableTouch: false
+      })
+
+      scroll.on('scroll', function(){
+        //判断下拉的距离是否超过50px
+        if(scroll.y >= 50){
+          oDropDown.innerHTML = '松手刷新';
+        }else{
+          oDropDown.innerHTML = '下拉刷新';
+        }
+
+        //判断下拉的距离是否完全将内容拉到底了
+        if(-scroll.y - (oChild.offsetHeight - oParent.offsetHeight) >= 50){
+          oLoadMore.innerHTML = '松手加载';
+        }else{
+          oLoadMore.innerHTML = '加载更多';
+        }
+      })
+
+      oParent.addEventListener('touchend', function(){
+        if(scroll.y >= 50){
+          scroll.disable();
+          oChild.style.transition = 'all 0.6s ease';
+          oChild.style.transform = `translateY(${oDropDown.offsetHeight}px)`;
+
+          oDropDown.innerHTML= '<img src="./loading.gif" width="20" height="20"/> 加载中...'
+          $.ajax({
+            url: '1.txt',
+            success(txt){
+              setTimeout(function(){
+                oChild.innerHTML = txt;
+                oChild.style.transform = 'translateY(0px)';
+
+                function fnEnd(){
+                  oChild.style.transition = 'none';
+                  oChild.removeEventListener('transitionend', fnEnd, false);
+
+                  scroll.y = 0;
+                  scroll.enable();
+                }
+
+                oChild.addEventListener('transitionend', fnEnd, false);
+
+                oDropDown.innerHTML = '';
+              }, 3000)
+            },
+            error(err){
+              alert("加载失败");
+            }
+          })
+        }
+      }, false)
+
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    body{
+      background: green;
+      text-align: center;
+    }
+    #c1{
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+    <canvas id="c1" width="800" height="600"></canvas>
+
+  <script>
+    window.onload = function(){
+      var oC = document.getElementById('c1');
+      var gd = oC.getContext('2d');
+
+      let r = 0;
+      requestAnimationFrame(next);
+
+      function next(){
+        gd.clearRect(0, 0, oC.width, oC.height);
+
+        r++;
+        gd.save();
+        gd.translate(200, 175);
+        gd.rotate(r*Math.PI/180);
+
+        gd.strokeRect(-100, -75, 200, 150);
+        gd.restore();
+
+        requestAnimationFrame(next);
+      }
+    }
+  </script>
+</body>
+</html>

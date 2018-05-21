@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <form action="">
+    <meter id="m1" value="" min = "" max= "100" style="width: 500px"></meter><br>
+    <input type="file" id="f1" multiple /><br>
+    <input type="button" value="提交" id="btn1" />
+  </form>
+
+  <script>
+    window.onload = function(){
+      let oF = document.getElementById('f1');
+      let oBtn = document.getElementById('btn1');
+
+      oBtn.onclick = function(){
+        console.log(oF.files);
+        let data = new FormData();
+
+        Array.from(oF.files).forEach(file => {
+          data.append('f1', file);
+        });
+
+        let oAjax = new XMLHttpRequest();
+        console.log(oAjax);
+
+        oAjax.open('POST', 'http://localhost:8080/api', true);
+        oAjax.upload.onprogress = function(ev){
+          console.log('loaded', ev.loaded);
+          console.log('total', ev.total);
+
+          let oM = document.getElementById('m1');
+          oM.value = 100*ev.loaded/ev.total;
+        };
+        oAjax.send(data);
+
+        // oAjax.onreadystatechange = function(){
+        //   if(oAjax.readyState == 4){
+        //     if((oAjax.status >= 200 && oAjax.status < 300) || oAjax.status == 304){
+        //       alert('成功');
+        //     }else{
+        //       alert('失败');
+        //     }
+        //   }
+        // }
+      }
+    }
+  </script>
+</body>
+</html>

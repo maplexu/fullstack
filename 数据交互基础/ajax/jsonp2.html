@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>jsonp2</title>
+</head>
+<body>
+  <input type="text" id="txt1" />
+  <script>
+    function show(json){
+      console.log(json.s);
+    }
+
+    window.onload = function(){
+      let oS = document.getElementById('s1');
+      let oTxt = document.getElementById('txt1');
+
+      oTxt.oninput = function(){
+        console.log('11');
+        oS.src = `https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=${oTxt.value}&cb=show`
+      }
+    }
+  </script>
+  <script id="s1" charset="utf-8"></script>
+</body>
+</html>

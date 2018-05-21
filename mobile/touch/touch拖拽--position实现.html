@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>touch事件拖拽元素--transform方式实现</title>
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+    }
+    .box{
+      width: 100px;
+      height: 100px;
+      background: #ccc;
+      position: relative;
+      left: 0;
+      top: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="box"></div>
+
+  <script>
+    window.onload = function(){
+      let oBox = document.getElementsByClassName('box')[0];
+
+      oBox.addEventListener('touchstart', function(ev){
+        let distX = ev.targetTouches[0].clientX - oBox.offsetLeft;
+        let distY = ev.targetTouches[0].clientY - oBox.offsetTop;
+
+        function fnMove(ev){
+          oBox.style.left = ev.targetTouches[0].clientX - distX + 'px';
+          oBox.style.top = ev.targetTouches[0].clientY - distY + 'px';
+        }
+        function fnEnd(ev){
+          oBox.removeEventListener('touchmove', fnMove, false);
+          oBox.removeEventListener('touchend', fnEnd, false);
+        }
+
+        oBox.addEventListener('touchmove', fnMove, false);
+        oBox.addEventListener('touchend', fnEnd, false);
+      }, false);
+    }
+  </script>
+</body>
+</html>

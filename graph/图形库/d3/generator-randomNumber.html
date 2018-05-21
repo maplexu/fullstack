@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./d3.js" charset="utf-8"></script>
+</head>
+<body>
+  <script>
+    window.onload = function(){
+      let gen = d3.randomUniform(0, 20);
+      console.log(Math.floor(gen()));
+      let arr = [];
+      for(let i = 0; i < 100000; i++){
+        let n = Math.floor(gen());
+        if(!arr[n]){
+          arr[n] = 1;
+        }else{
+          arr[n]++;
+        }
+      }
+      console.log(arr);
+
+      let gen2 = d3.randomNormal(15);
+      console.log(Math.round(gen2()));
+    }
+  </script>
+</body>
+</html>

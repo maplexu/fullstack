@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>对比hammer的tab和press事件</title>
+  <script src="./hammer.js" charset="utf-8"></script>
+  <style>
+    .box{
+      width: 200px;
+      height: 200px;
+      background: #ccc;
+      margin: 100px auto 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="box"></div>
+
+  <script>
+    window.onload = function(){
+      let oBox = document.querySelector('.box');
+
+      let hammer = new Hammer(oBox);
+
+      console.log(hammer);
+
+      hammer.on('panleft', ev => {
+        console.log('left');
+      });
+      hammer.on('panright', ev => {
+        console.log('right');
+      })
+      hammer.on('panup', ev => {
+        console.log('up');
+      })
+      hammer.on('pandown', ev=> {
+        console.log('down');
+      })
+    }
+  </script>
+</body>
+</html>

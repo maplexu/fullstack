@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    body{
+      background: black;
+      text-align: center;
+    }
+    #c1{
+      background: white;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="c1" width="800" height="600"></canvas>
+
+  <script>
+    window.onload = function(){
+      var oC = document.getElementById('c1');
+      var gd = oC.getContext('2d');
+
+      var pause = false;
+      var n = 0;
+      var x = 0;
+      var counter = 0;    //帧计数器(每隔多少帧才换一张图片)
+
+      var oImg = new Image();
+      oImg.src = 'fish1.png';
+      oImg.onload = function(){
+        requestAnimationFrame(next);
+        function next(){
+          if(!pause){
+            gd.clearRect(0, 0, oC.width, oC.height);
+            if(counter%4 == 0){
+              n++;
+              if(n == 4){
+                n = 0;
+              }
+            }
+            counter ++;
+            x += 1.5;
+            gd.drawImage(
+              oImg,
+              0, n*37, 55, 37,
+              x, 100, 55, 37
+            )
+
+          }
+          requestAnimationFrame(next);
+        }
+      }
+
+      document.onclick = function(){
+        pause = !pause;
+      }
+    }
+  </script>
+</body>
+</html>

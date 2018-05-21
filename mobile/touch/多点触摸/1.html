@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1,user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    body{
+      height: 2000px;
+    }
+    #box{
+      position: absolute;
+      top: 100px;
+      left: 50%;
+      margin-left: -100px;
+      width: 200px;
+      height: 200px;
+      background: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div id="box"></div>
+  <div id="content">0</div>
+  <div class="content2">0</div>
+
+  <script>
+    var box = document.getElementById('box');
+    var content = document.getElementById('content');
+    var content2 = document.getElementsByClassName('content2')[0];
+
+    var key = true;
+    // box.onclick = function(){
+    //   box.style.background = key ?'red' : '#ccc';
+    //   key = !key;
+    // }
+    window.onload = function(){
+      document.addEventListener('touchstart', function(ev){
+        content.innerHTML = '点击document:' + ev.targetTouches.length;
+      }, false)
+      box.addEventListener('touchstart', function(ev){
+        box.style.background = key ?'red' : '#ccc';
+        key = !key;
+        content2.innerHTML = ev.targetTouches.length;
+      }, false)
+    }
+  </script>
+</body>
+</html>

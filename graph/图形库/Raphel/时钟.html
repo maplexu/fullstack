@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./raphael.js" charset="utf-8"></script>
+</head>
+<body>
+  <script>
+    window.onload = function(){
+      let paper = Raphael(0, 0, 800, 600);
+      let cx = 400, cy = 300; r=200;
+
+      function createPath(r, ang, color){
+        let path = paper.path();
+        path.attr({'stroke-width': 20, 'stroke': color})
+        calc(ang, true);
+
+        function calc(ang, isFirst = false){
+          let arr = [];
+          //1.添加弧的起点
+          arr.push(`M ${cx} ${cy-r}`);
+          //2.绘制弧线
+          let x = cx + Math.sin(ang*Math.PI/180)*r;
+          let y = cy - Math.cos(ang*Math.PI/180)*r;
+          let juggSize = ang > 180 ? 1 : 0;
+          arr.push(`A ${r} ${r} 0 ${juggSize} 1 ${x} ${y}`);
+
+          // path.attr('path', arr.join(' '));
+          if(isFirst){
+            path.attr('path', arr.join(' '));
+          }else{
+            if(ang == 0){
+              path.attr('path', arr.join(' '));
+            }else{
+              path.animate({path: arr.join(' ')}, 500, 'bounce');
+            }
+          }
+
+        }
+
+        path.calc = calc;
+        return path;
+      }
+
+      //存放表示小时，分钟，秒的三个path
+      let paths = [];
+      function tick(){
+        let oDate = new Date();
+        if(paths.length == 0){
+          paths = [
+            createPath(200, 360*oDate.getHours()/12, 'red'),
+            createPath(150, 360*oDate.getMinutes()/60, 'green'),
+            createPath(100, 360*oDate.getSeconds()/60, 'yellow')
+          ];
+        }else{
+          paths[0].calc(360*oDate.getHours()/12);
+          paths[1].calc(360*oDate.getMinutes()/60);
+          paths[2].calc(360*oDate.getSeconds()/60);
+        }
+      }
+      tick();
+      setInterval(tick, 1000);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    body{
+      background: black;
+      text-align: center;
+    }
+    #c1{
+      background: white;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="c1" width="800" height="600"></canvas>
+  <form action="http://localhost:8080/upload_base64" method="post" id="form1" style="display: none">
+    <textarea name="col" cols="80" rows="10"></textarea>
+  </form>
+  <button id="btn">下载图片</button>
+
+  <script>
+    window.onload = function(){
+      var oC = document.getElementById('c1');
+      var gd =  oC.getContext('2d');
+      var W = oC.width;
+      var H = oC.height;
+
+      var oImg = new Image();
+      oImg.src = './2.jpg';
+
+      oImg.onload = function(){
+        gd.drawImage(oImg, 0, 0);
+
+        var imageData = gd.getImageData(0, 0, oC.width, oC.height);
+        var data = imageData.data;
+
+        for(var r = 0; r < H; r++){
+          for(var c = 0; c < W; c++){
+            data[(r*W + c)*4 + 0] = data[(r*W + c)*4 + 1] = data[(r*W + c)*4 + 2] =
+            0.8*(data[(r*W + c)*4 + 0] + data[(r*W + c)*4 + 1] + data[(r*W + c)*4 + 2])/3
+          }
+        }
+
+        gd.putImageData(imageData, 0, 0);
+      }
+
+      var oBtn = document.getElementById('btn');
+      oBtn.onclick = function(){
+        var str = oC.toDataURL();
+
+        // document.getElementsByName('col')[0].value = str;
+        // document.getElementById('form1').submit();
+
+        //ajax请求都无法实现服务端的文件下载
+        // var xhr = new XMLHttpRequest();
+        // xhr.open('POST', 'http://localhost:8080/upload_base64', true);
+        // xhr.send(str);
+        // xhr.onreadystatechange = function(){
+        //   if(xhr.readyState == 4){
+        //     if((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
+        //       console.log('发送成功');
+        //       console.log(xhr.responseText);
+        //     }else{
+        //       console.log('发送失败');
+        //     }
+        //   }
+        // }
+      }
+    }
+  </script>
+</body>
+</html>

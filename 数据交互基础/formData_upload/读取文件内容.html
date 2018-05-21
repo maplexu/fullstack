@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>读取文件</title>
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+    }
+    .box{
+      width: 400px;
+      height: 200px;
+      background: #ccc;
+      border: 1px solid black;
+      line-height: 200px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin-left: -200px;
+      margin-top: -100px;
+      text-align: center;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+      请把文件拖到这儿
+  </div>
+  <div id="container">
+
+  </div>
+
+  <script>
+    window.onload = function(){
+      let oBox = document.querySelector('.box');
+      let container = document.getElementById('container');
+      let timer;
+
+      document.addEventListener('dragover', (ev) => {
+        clearTimeout(timer);
+        oBox.style.display = "block";
+
+        timer = setTimeout(function(){
+          oBox.style.display = "none";
+        }, 300);
+        ev.preventDefault();
+      }, false);
+
+      oBox.addEventListener('dragenter', () => {
+        oBox.innerHTML = '请松手';
+      }, false);
+      oBox.addEventListener('dragleave', () => {
+        oBox.innerHTML = '请把文件拖到这儿';
+      }, false);
+
+      oBox.addEventListener('drop', ev => {
+        let file = ev.dataTransfer.files[0];
+        console.log(ev.dataTransfer.files);
+        console.log(file);
+        //读取文件：
+        let reader = new FileReader();
+        reader.onload = function(){
+          document.write(reader.result);
+        }
+
+        //读取成字符串形式
+        //reader.readAsBinaryString(file);
+        ev.preventDefault();
+      }, false);
+    }
+  </script>
+</body>
+</html>

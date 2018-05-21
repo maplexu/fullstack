@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    body{
+      height: 2000px;
+    }
+    .box{
+      width: 200px;
+      height: 200px;
+      background: #ccc;
+      border: 1px solid black;
+      position: absolute;
+      line-height: 200px;
+      text-align: center;
+      font-size: 40px;
+      left: 50%;
+      top: 150px;
+      margin-left: -100px;
+      transform: rotate(0deg);
+    }
+  </style>
+</head>
+<body>
+  <input type="text" id="text" name="" value="">
+  <input type="button" value="按钮" onclick="document.querySelector('.box').style.background='yellow';">
+  <div class="box">asdfasdf</div>
+
+  <script>
+    function calcAng(touch1, touch2){
+      var x = touch1.clientX - touch2.clientX;
+      var y = touch1.clientY - touch2.clientY;
+
+      return Math.atan2(y, x)*180/Math.PI;
+    }
+
+    window.onload = function(){
+      var oBox = document.getElementsByClassName('box')[0];
+      var oText = document.getElementById('text');
+
+      var ang1, ang2;
+      var ang=0, old_ang;
+
+      document.addEventListener('touchstart', function(ev){
+        if(ev.targetTouches.length >= 2){
+          ang1 = calcAng(ev.targetTouches[0], ev.targetTouches[1]);
+          old_ang = ang;
+        }
+      }, false);
+
+      document.addEventListener('touchmove', function(ev){
+        if(ev.targetTouches.length >= 2){
+          ang2 = calcAng(ev.targetTouches[0], ev.targetTouches[1]);
+          ang = old_ang + ang2 - ang1;
+          oBox.style.transform = `rotate(${ang}deg)`;
+        }
+      }, false)
+    }
+  </script>
+</body>
+</html>

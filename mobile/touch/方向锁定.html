@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>方向锁定</title>
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+    }
+    .box{
+      width: 100px;
+      height: 100px;
+      background: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div class="box"></div>
+
+  <script>
+    let oBox = document.getElementsByClassName('box')[0];
+    let x = 0, y = 0;
+
+    oBox.addEventListener('touchstart', function(ev){
+      let dir  = '';
+
+      let distX = ev.targetTouches[0].clientX - x;
+      let distY = ev.targetTouches[0].clientY - y;
+
+      let startX = ev.targetTouches[0].clientX;
+      let startY = ev.targetTouches[0].clientY;
+
+      function fnMove(ev){
+        if(dir == ''){
+          //等待中：看哪一个方向上先运动超过5px;
+          if(Math.abs(ev.targetTouches[0].clientX - startX) >= 5){
+            dir = 'x';
+          }else if(Math.abs(ev.targetTouches[0].clientY - startY) >= 5){
+            dir = 'y';
+          }
+        }else{
+          if(dir == 'x'){
+            x = ev.targetTouches[0].clientX - distX;
+          }else{
+            y = ev.targetTouches[0].clientY - distY;
+          }
+
+          oBox.style.transform = `translate(${x}px, ${y}px)`;
+        }
+      }
+      function fnEnd(ev){
+        oBox.removeEventListener('touchmove', fnMove, false);
+        oBox.removeEventListener('touchend', fnEnd, false);
+      }
+
+      oBox.addEventListener('touchmove', fnMove, false);
+      oBox.addEventListener('touchend', fnEnd, false);
+    }, false)
+
+  </script>
+</body>
+</html>

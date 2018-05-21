@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>SVG事件</title>
+</head>
+<body>
+  <svg width="800" height="900">
+    <line x1="100" y1="100" x2="300" y2="300" stroke="black" stroke-width="20" onmouseover="this.style.stroke='green'" onmouseout="this.style.stroke='black'">
+    </line>
+    <line x1="200" y1="100" x2="400" y2="300" stroke="black" stroke-width="20" id="line1">
+    </line>
+    <line x1="300" y1="100" x2="500" y2="300" stroke="black" stroke-width="20" id="line2">
+    </line>
+  </svg>
+
+  <script>
+    window.onload = function(){
+      var line1 = document.getElementById('line1');
+      var line2 = document.getElementById('line2');
+      
+      line1.onmouseover = function(){
+        this.style.stroke = 'green';
+      }
+      line1.onmouseout = function(){
+        this.style.stroke = 'black';
+      }
+
+      line2.addEventListener('mouseover', function(){
+        this.style.stroke = 'green';
+      }, false);
+      line2.addEventListener('mouseout', function(){
+        this.style.stroke = 'black';
+      }, false);
+
+      document.body.onmouseover = function(ev){
+        console.log(ev.srcElement);
+        console.log(ev.target);
+      }
+    }
+  </script>
+</body>
+</html>

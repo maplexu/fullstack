@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+
+
+  <script>
+    window.onload = function(){
+      var oSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      oSvg.setAttribute('width', 800);
+      oSvg.setAttribute('height', 800);
+      document.body.appendChild(oSvg);
+
+      //定义圆心和半径
+      var cx = 400, cy = 400, r = 200;
+      //定义饼图各部分占据的内容大小：
+      var total_arr = [200, 50, 140, 100, 90];
+      var sum = 0;
+      total_arr.forEach(item => {
+        sum += item;
+      })
+      var cur = 0;
+      total_arr.forEach(item => {
+        var start_ang = cur;
+        var end_ang = cur + item/sum*360;
+        var color = getRandomColor();
+        drawPie(start_ang, end_ang, color);
+        cur = end_ang;
+      })
+      //获取随机颜色：
+      function getRandomColor(){
+        var color = Math.floor(Math.random()*1677216).toString(16);
+        console.log(color);
+        return color.length < 6 ? '#0'+color : '#'+color;
+      }
+
+      //角度转弧度
+      function d2r(n){
+        return n*Math.PI/180;
+      }
+      //获取弧上的点坐标
+      function getPoint(ang){
+        return {
+          x: cx + Math.sin(d2r(ang))*r,
+          y: cx - Math.cos(d2r(ang))*r
+        }
+      }
+
+      function drawPie(ang1, ang2, color){
+        var oPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        oSvg.appendChild(oPath);
+        oPath.style.fill = color;
+
+
+        var arr = [];
+
+        //1.从圆心开始
+        arr.push(`M ${cx} ${cy}`);
+        //2.到弧上第一个点连线
+        var { x: x1, y: y1 } = getPoint(ang1);
+        arr.push(`L ${x1} ${y1}`);
+        //3.两点之间的弧
+        var { x: x2, y: y2 } = getPoint(ang2);
+        var juggSize = ang2 -ang1 > 180 ? 1 : 0;
+        arr.push(`A ${r} ${r} 0 ${juggSize} 1 ${x2} ${y2}`);
+        //4.闭合弧的终点到圆心
+        arr.push('Z');
+
+        var path = arr.join(' ');
+        console.log(path);
+        oPath.setAttribute('d', path);
+      }
+      // drawPie(ang1, ang2, 'pink');
+    }
+  </script>
+</body>
+</html>

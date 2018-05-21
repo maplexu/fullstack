@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>ajax1</title>
+  <script src="./jquery-3.2.1.min.js"></script>
+</head>
+<body>
+  <button id="btn1">点击测试</button>
+
+  <script>
+    $('#btn1').click(function(){
+      if(window.XMLHttpRequest){
+        var xhr = new XMLHttpRequest();
+      }else{
+        var xhr = new ActiveXObject('Microsoft.XMLHttp');
+      }
+
+      //连接
+      xhr.open('get', '1.php?a=12&b=5', true);
+      //发送
+      xhr.send();
+      //接收
+      xhr.onreadystatechange = function(){
+        //判断是否请求成功（1.判断是否接收到数据；2.判断返回的http状态码是否为200）
+        if(xhr.readyState == 4){
+          console.log(1);
+          if((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
+            alert('成功'+xhr.responseText);
+          }else{
+            alert('失败');
+          }
+        }
+      }
+    })
+  </script>
+</body>
+</html>

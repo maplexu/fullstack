@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>案例5--绘制雷达图</title>
+  <script src="./echarts.js" charset="utf-8"></script>
+  <style>
+    .box{
+      width: 800px;
+      height: 600px;
+      border: 1px solid #ccc;
+      margin: 10px auto 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="box"></div>
+
+  <script>
+    let $ = document.querySelectorAll.bind(document);
+    window.onload = function(){
+      let oBox = $('.box')[0];
+
+      let option = {
+        title: {
+          text: '背景市人口分布',
+          subtext: '2017年度（单位：万）'
+        },
+        legend: {
+          data: ['收入差距']
+        },
+        radar: {
+          indicator: [
+            {name: 'HP', max: 99},
+            {name: 'MP', max: 99},
+            {name: '攻击力', max: 99},
+            {name: '防御力', max: 99},
+            {name: '暴击', max: 99}
+          ]
+        },
+        series: [
+          {
+            name: '收入差距',
+            type: 'radar',
+            data: [
+              {name: '张三', value: [90, 80, 21, 50, 12]},
+              {name: '李四', value: [22, 95, 78, 10, 43]}
+            ]
+          }
+        ]
+      }
+      //1.创建
+      let chart = echarts.init(oBox);
+
+      //2.设置参数
+      chart.setOption(option)
+    }
+  </script>
+</body>
+</html>

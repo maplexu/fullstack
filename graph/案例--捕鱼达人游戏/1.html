@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>捕鱼达人</title>
+  <style>
+    body{
+      background: black;
+      text-align: center;
+    }
+    #c1{
+      background: url(img/game_bg_2_hd.jpg);
+    }
+  </style>
+  <script src="jquery.js" charset="utf-8"></script>
+  <script src="js/common.js" charset="utf-8"></script>
+  <script src="js/resource.js" charset="utf-8"></script>
+  <script src="js/Spirit.js" charset="utf-8"></script>
+  <script src="js/Fish.js" charset="utf-8"></script>
+  <script src="js/Cannon.js" charset="utf-8"></script>
+  <script src="js/Bullet.js" charset="utf-8"></script>
+  <script src="js/Button.js" charset="utf-8"></script>
+  <script src="js/Coin.js" charset="utf-8"></script>
+</head>
+<body>
+  <canvas id="c1" width="800" height="600"></canvas>
+
+  <script>
+    window.onload = async function(){
+      let oC = $('#c1')[0];
+      let W = oC.width, H = oC.height;
+      let gd = oC.getContext('2d');
+
+      //获取素材数据
+      try{
+        var imgs = await loadResources();
+      }catch(e){
+        alert('加载失败，请刷新重试');
+      }
+
+      //画鱼(随机产生，会有很多鱼)：
+      let fishes = [];
+      setInterval(function(){
+        if(Math.random() < 0.1){
+          let fish  = new Fish(rndInt(1, 6));
+
+          //这里加一个随机判断，决定鱼是从左边还是右边出现：
+          if(Math.random()<0.5){
+            fish.x = -100;
+            fish.y = rndInt(0, H);
+            fish.rotation = rnd(70, 100);
+          }else{
+            fish.x = W + 100;
+            fish.y = rndInt(0, H);
+            fish.rotation = rnd(-110, -70);
+            fish.scaleY = -1;
+          }
+          fishes.push(fish);
+        }
+      }, 50);
+
+      //画炮座：
+      let data_bar = __g_resource['bottom'].bottom_bar;
+      let bottom_bar = new Spirit({
+        img: data_bar.img,
+        w: data_bar.frame.w,
+        h: data_bar.frame.h,
+        sx: data_bar.frame.x,
+        sy: data_bar.frame.y,
+        x: 400,
+        y: 566
+      })
+      bottom_bar.draw(gd);
+
+
+      //画炮：
+      let cannon = new Cannon(1);
+      cannon.x = 442;
+      cannon.y = 572;
+      cannon.draw(gd);
+      //炮----炮随着鼠标旋转
+          //实现方法：计算鼠标触点和炮中心点的连线与垂直方向的角度即可
+      oC.onmousemove = function(ev){
+        //计算鼠标点击位置与炮口的位置差
+        let a = ev.offsetX - cannon.x;
+        let b = ev.offsetY - cannon.y;
+
+        //（由上面的位置差）计算出角度：
+        cannon.rotation = Math.atan2(b, a)*180/Math.PI + 90;  //注意：由于js中的tan也是以向右作为0度开始，因此这里要加上90度
+      }
+      // 画炮弹（鼠标点击时发射炮弹）：
+      let bullets = [];      //定义一个数组，存放发射的炮弹（可以连续发射很多的炮弹）
+      let last_fire = 0;
+      let firing = false;
+
+      oC.onclick = function(){
+        //定义一个开炮的限制频率，当连续点击间隔小于300ms时，就不开炮
+        let now = Date.now();
+        if(now - last_fire < 300){
+          return;
+        }
+        last_fire = now;
+        firing = true;            //该参数用于给下面的动画帧来判断是否切换炮的图片
+
+        let bullet = new Bullet(cannon.type);
+        bullet.x = cannon.x;
+        bullet.y = cannon.y;
+        bullet.rotation = cannon.rotation;
+
+        bullets.push(bullet);
+      }
+
+      //画 切换炮大小的按钮：
+      let btnMinus = new Button(__g_resource['bottom']['cannon_minus'], __g_resource['bottom']['cannon_minus_down']);
+      let btnPlus = new Button(__g_resource['bottom']['cannon_plus'], __g_resource['bottom']['cannon_plus_down']);
+      btnMinus.x = 442-70;
+      btnMinus.y = 580;
+
+      btnPlus.x = 442+70;
+      btnPlus.y = 580;
+
+      //切换炮大小的按钮----点击时切换炮的大小
+      oC.onmousedown = function(ev){
+        let minus = false;
+        let plus = false;
+
+        if(btnMinus.checkDown(ev.offsetX, ev.offsetY)){
+          minus = true;
+        }
+        if(btnPlus.checkDown(ev.offsetX, ev.offsetY)){
+          plus = true;
+        }
+
+        if(minus && cannon.type > 1){
+          cannon.setType(cannon.type - 1);
+        }
+        if(plus && cannon.type < 7){
+          cannon.setType(cannon.type + 1);
+        }
+      }
+
+      oC.onmouseup = function(ev){
+        btnMinus.checkUp(ev.offsetX, ev.offsetY);
+        btnPlus.checkUp(ev.offsetX, ev.offsetY);
+      }
+
+      // 画 硬币
+      let coins = [];
+
+      //添加动画(每一帧都全部重新绘制一遍)：
+      requestAnimationFrame(next);
+      function next(){
+        //1.清除画布
+        gd.clearRect(0, 0, oC.width, oC.height);
+
+        //2.移动(动画)
+        //判断是否点击开炮了（是的画就变化一个周期的动画帧）
+        if(firing){
+          if(true == cannon.nextFrame()){
+            firing = false;
+          }
+        }
+
+        fishes.forEach(fish => fish.move());        //鱼位置移动
+        fishes.forEach(fish => fish.nextFrame());   //切换鱼的图片
+        bullets.forEach(bullet => bullet.move());
+        coins.forEach(coin => coin.nextFrame());
+
+        //2.2补充：清除超出画布范围的炮弹和鱼：
+        fishes = fishes.filter( fish => !fish.outOfCanvas(W, H));
+        bullets = bullets.filter( bullet => !bullet.outOfCanvas(W, H));
+
+
+        //2.3 碰撞检测：
+        fishes.forEach((fish, f_index) => {
+          bullets.forEach((bullet, b_index) => {
+            if(fish.collTest(bullet)){
+              //当鱼和炮弹碰撞时，鱼和炮弹都消失，硬币出现：
+              bullets.splice(b_index, 1);
+              fishes.splice(f_index, 1);
+
+              //硬币
+              let coin = new Coin(2);
+              coin.x = fish.x;
+              coin.y = fish.y;
+              coins.push(coin);
+            }
+          })
+        })
+
+
+        //3.绘制
+        bottom_bar.draw(gd);        //先画的被挡在下面
+        fishes.forEach(fish => fish.draw(gd));
+        bullets.forEach(bullet => bullet.draw(gd));
+        coins.forEach(coin => coin.draw(gd));
+        cannon.draw(gd);
+        btnMinus.draw(gd);
+        btnPlus.draw(gd);
+
+        requestAnimationFrame(next);
+      }
+    }
+  </script>
+</body>
+</html>

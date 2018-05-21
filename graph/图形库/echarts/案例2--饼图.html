@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>案例2--饼图</title>
+  <script src="./echarts.js" charset="utf-8"></script>
+  <style>
+    .box{
+      width: 800px;
+      height: 600px;
+      border: 1px solid #ccc;
+      margin: 10px auto 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="box"></div>
+
+  <script>
+    let $ = document.querySelectorAll.bind(document);
+    window.onload = function(){
+      let oBox = $('.box')[0];
+
+      let option = {
+        title: {
+          text: '背景市人口分布',
+          subtext: '2017年度（单位：万）'
+        },
+        series: [
+          {
+            name: '性别比例',
+            type: 'pie',
+            data: [
+              {name: '男', value: 2000},
+              {name: '女', value: 1500}
+            ]
+          }
+        ]
+      }
+      //1.创建
+      let chart = echarts.init(oBox);
+
+      //2.设置参数
+      chart.setOption(option);
+    }
+  </script>
+</body>
+</html>

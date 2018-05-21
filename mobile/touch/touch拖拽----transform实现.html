@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+    }
+    .box{
+      width: 100px;
+      height: 100px;
+      background: #ccc;
+      transform: translate(0px, 0px);
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+
+  </div>
+
+  <script>
+    window.onload = function(){
+      let oBox = document.getElementsByClassName('box')[0];
+      //定义一组全局变量，用于存储transform运动后的位置
+      let x = 0;
+      let y = 0;
+
+      oBox.addEventListener('touchstart', function(ev){
+        let distX = ev.targetTouches[0].clientX - x;
+        let distY = ev.targetTouches[0].clientY - y;
+
+        function fnMove(ev){
+          x = ev.targetTouches[0].clientX - distX;
+          y = ev.targetTouches[0].clientY - distY;
+
+          oBox.style.transform = `translate(${x}px, ${y}px)`;
+        }
+        function fnEnd(ev){
+          oBox.removeEventListener('touchmove', fnMove, false);
+          oBox.removeEventListener('touchend', fnEnd, false);
+        }
+
+        oBox.addEventListener('touchmove', fnMove, false);
+        oBox.addEventListener('touchend', fnEnd, false);
+      }, false);
+
+    }
+  </script>
+</body>
+</html>

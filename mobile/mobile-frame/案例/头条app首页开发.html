@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./hammer.js" charset="utf-8"></script>
+  <script src="./jquery.js" charset="utf-8"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .page .nav{
+      width: 100%;
+      overflow: hidden;
+      padding: 10px 0;
+    }
+    .page .nav ul {
+      position: relative;
+      overflow: hidden;
+    }
+    .page .nav ul li {
+      float:left;
+      width: 80px;
+      text-align: center;
+      transition: all 0.6s ease;
+    }
+    .page .nav ul li.active{
+      color: #F00;
+    }
+    .page .nav ul .line{
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 80px;
+      height: 1px;
+      background: #F00;
+      transition: all 0.6s ease;
+    }
+    .page .wrap{
+      width: 100%;
+      height: 600px;
+      overflow: hidden;
+    }
+    .page .content{
+      overflow: hidden;
+      height: 600px;
+    }
+    .page .content-item{
+      float: left;
+      width: 100vw;
+      height: 100%;
+      box-sizing: border-box;
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="nav">
+      <ul>
+        <li class="active">趣图</li>
+        <li>推荐</li>
+        <li>两会</li>
+        <li>视频</li>
+        <li>段子</li>
+        <li>aaa</li>
+        <li>bbb</li>
+        <li>ccc</li>
+        <li>ddd</li>
+        <li>eee</li>
+        <div class="line"></div>
+      </ul>
+    </div>
+    <div class="wrap">
+      <div class="content">
+        <div class="content-item">趣图</div>
+        <div class="content-item">推荐</div>
+        <div class="content-item">两会</div>
+        <div class="content-item">视频</div>
+        <div class="content-item">段子</div>
+        <div class="content-item">aaa</div>
+        <div class="content-item">bbb</div>
+        <div class="content-item">ccc</div>
+        <div class="content-item">ddd</div>
+        <div class="content-item">eee</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    var oPage = document.querySelector('.page');
+    var oNav = document.querySelector('.page .nav');
+    var oNavUl = document.querySelector('.page .nav ul');
+    var oNavLi = document.querySelectorAll('.page .nav ul li');
+    var oLine = document.querySelector('.line');
+
+    var oContent = document.querySelector('.content');
+    var oContentItem = document.querySelectorAll('.content-item');
+
+    //定义导航栏和内容块的宽度 = 子元素的宽度*子元素的个数
+    oNavUl.style.width = oNavLi[0].offsetWidth*oNavLi.length + 'px';
+    oContent.style.width = oContentItem[0].offsetWidth*oContentItem.length + 'px';
+
+    //导航块可点击：
+    Array.from(oNavLi).forEach(function(li, index){
+      var hammer = new Hammer(li);
+      hammer.on('tap', function(){
+        goto(index);
+      })
+    })
+
+    //导航块点击时的切换函数
+    function goto(index){
+      Array.from(oNavLi).forEach(function(li){
+        li.className = '';
+      })
+      oNavLi[index].className = 'active';
+      //下划线滑动到指定的导航块下方
+      oLine.style.left = oNavLi[index].offsetLeft + 'px';
+
+      //判断当前导航块在被选中时是否可居中：
+      //若可居中，left就是导航块能够居中的导航栏的left值
+      //否则，就将导航栏切换到最左边或最右边
+      var left = oNavLi[index].offsetLeft - (document.documentElement.clientWidth - oNavLi[index].offsetWidth)/2;
+      if(left<0){
+        //让导航栏滑倒最左边的left值
+        left = 0;
+      }else if(left > oNavUl.offsetWidth - oNav.offsetWidth){
+        //让导航栏滑倒最右边的left的值
+        left = oNavUl.offsetWidth - oNav.offsetWidth;
+      }
+
+      oNavUl.style.transition = 'all 0.6s ease';
+      oNavUl.style.transform = `translateX(${-left}px)`;
+
+      //下方的内容块滑动到指定的内容：
+      oContent.style.transition = 'all 0.6s ease';
+      oContent.style.transform = `translateX(${-oContentItem[0].offsetWidth*index}px)`
+
+      console.log('开始切换');
+      function fnEnd(){
+        console.log(11);
+        oNavUl.style.transition = 'none';
+        oContent.style.transition = 'none';
+        oNavUl.removeEventListener('transitionend', fnEnd, false);
+      }
+      oNavUl.addEventListener('transitionend', fnEnd, false);
+      oContent.addEventListener('transitionend', fnEnd, false);
+    }
+
+
+    //对内容块添加滑动切换效果：
+    var hammer2 = new Hammer(oContent);
+    //定义滑动时的初始触摸点
+    var start_x, start_y;
+    //记录初始滑动距离，以及上一次最后滑动的距离
+    var translateX = 0, old_translateX;
+
+    hammer2.on('panstart', function(ev){
+      oContent.style.transition = 'none';
+      start_x = ev.center.x;
+      start_y = ev.center.y;
+
+      old_translateX = translateX;
+    })
+    hammer2.on('panmove', function(ev){
+      //这里就i不判断滑动的方向了，因为hammer默认就是处理横向滑动
+
+      translateX = ev.center.x - start_x + old_translateX;
+      oContent.style.transform = `translateX(${translateX}px)`;
+
+      //滑动时，对应导航块的颜色变换
+      var w = oContentItem[0].offsetWidth;
+      //计算当前是哪个内容块在屏幕中显示（同时显示两个内容块，n是后一个值（从1开始的值））
+      var n = -Math.floor(translateX/w);
+
+      if(n<1){
+        n = 1;
+      }
+      var scale = (translateX - (-n)*w)/w;
+
+      oNavLi[n-1].style.color = `rgb(${Math.round(scale*0XFF)}, 0, 0)`;
+      oNavLi[n].style.color = `rgb(${Math.round(1-scale)*0XFF}, 0, 0)`;
+    })
+    hammer2.on('panend', function(){
+      if(translateX > 0){
+        translateX = 0;
+      }
+      //计算滑动结束时应该停在哪一个内容块
+      var n = Math.round(-translateX / oContentItem[0].offsetWidth);
+      translateX = -n*oContentItem[0].offsetWidth;
+
+      goto(n);
+    })
+
+  </script>
+</body>
+</html>

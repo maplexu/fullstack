@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>读取文件2----上传进度预览</title>
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .img_list{
+      overflow: hidden;
+    }
+    .img_list li {
+      float: left;
+      width: 200px;
+      height: 200px;
+      border: 3px solid #666;
+      margin: 10px;
+      position: relative;
+    }
+    .img_list li img{
+      width: 100%;
+      height: 100%;
+    }
+    .img_list li .del_btn{
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+
+    .box{
+      position: absolute;
+      width: 400px;
+      height: 200px;
+      top: 50%;
+      left: 50%;
+      margin-left: -200px;
+      margin-top: -100px;
+      background: #ccc;
+      border: 1px solid black;
+      line-height: 200px;
+      text-align: center;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <ul class="img_list"></ul>
+  <input type="button" name="" value="上传" id="btn_upload" />
+  <div class="box">
+    请把文件拖到这儿
+  </div>
+  <div class="box">
+    请把文件拖到这儿
+  </div>
+
+  <script>
+    window.onload = function(){
+      let oUl = document.querySelector('.img_list');
+      let oBtn = document.querySelector('#btn_upload');
+      let oBox = document.querySelector('.box');
+      let timer;
+
+      //1.拖拽选择文件的操作过程：
+      document.addEventListener('dragover', ev => {
+        clearTimeout(timer);
+        oBox.style.display = "block";
+
+
+        timer = setTimeout(function(){
+          oBox.style.display = "none";
+        }, 300);
+        ev.preventDefault();
+      }, false);
+
+      oBox.addEventListener('dragenter', ()=>{
+        oBox.innerHTML = '请放手';
+      }, false);
+      oBox.addEventListener('dragleave', ()=>{
+        oBox.innerHTML = "请把文件放在这儿";
+      }, false);
+      oBox.addEventListener('drop', ev => {
+        ev.preventDefault();
+        let fileList = ev.dataTransfer.files;
+
+        Array.from(fileList).forEach(file => {
+          //2. 预览显示已选中的图片
+          if(!file.type.startsWith('image/')){
+            return;
+          }
+
+          let reader = new FileReader();
+
+          //获取图片内容，进行预览
+          reader.onload = function(){
+            let oLi = document.createElement('li');
+            oLi.file = file;        //为每个li对象绑定上一个file属性，属性值就是一个file对象(方便上传的时候去拉取file对象)
+            oLi.innerHTML = '<img src="a.png" alt=""/><a href="javascript:;" class="del_btn">删除</a>'
+
+            let oImg = oLi.children[0];
+            oImg.src = this.result;
+
+            let oBtnDel = oLi.children[1];
+            oBtnDel.onclick = function(){
+              oUl.removeChild(oLi);
+            }
+            oUl.appendChild(oLi);
+          };
+
+          reader.readAsDataURL(file);
+        });
+      }, false);
+
+
+      //3.点击上传图片：
+      oBtn.onclick = function(){
+        let data = new FormData();
+
+        Array.from(oUl.children).forEach(li => {
+          data.append('f1', li.file);
+        });
+
+        let xhr = new XMLHttpRequest();
+
+        xhr.open('POST', 'http://localhost:8080/api', true);
+        xhr.send(data);
+
+        xhr.onreadystatechange = function(){
+          if(xhr.readyState == 4){
+            if((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
+              alert('成功');
+            }else{
+              alert('失败');
+            }
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>

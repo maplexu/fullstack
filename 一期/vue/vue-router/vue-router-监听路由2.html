@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="vue.js" charset="utf-8"></script>
+  <script src="vue-router.js" charset="utf-8"></script>
+</head>
+<body>
+  <div id="div1">
+    <router-link to="/user/32214">用户1</router-link>
+    <router-link to="/user/5542">用户2</router-link>
+    <router-link to="/user/7751">用户3</router-link>
+    <router-view></router-view>
+  </div>
+
+  <script>
+    window.onload = function(){
+
+      //1.声明路由
+      let r1 = new VueRouter({
+        routes: [
+          {
+            path: '/user/:id',
+            component: {
+              template: '<div>用户列表{{$route.params.id}}</div>',
+              beforeRouteUpdate(to, from ,next){
+                console.log(to);
+                console.log(from);
+                next();
+              }
+            }
+          },
+        ]
+      });
+      //2.调用路由
+      let vm = new Vue({
+        el: '#div1',
+        router: r1,
+      });
+
+    }
+  </script>
+</body>
+</html>

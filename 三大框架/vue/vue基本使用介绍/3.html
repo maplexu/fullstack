@@ -1,0 +1,27 @@
+<!-- 3.绑定标签属性 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./vue.js"></script>
+  <script>
+    window.onload = function(){
+      let vm = new Vue({
+        el: '#div1',    //该vue实例的作用范围
+        data: {
+          txt: '121'
+        }
+      })
+    }
+  </script>
+</head>
+<body>
+  <div id="div1">
+    <span v-bind:title="txt">span标签</span><br>
+    <span :title="txt">span标签2</span>
+  </div>
+</body>
+</html>

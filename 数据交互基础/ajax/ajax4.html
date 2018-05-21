@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <button type="button"  id="btn1" name="button">测试</button>
+
+  <script>
+    // options: {url, data, type, dataType, success ,error}
+    function ajax(options){
+      options = options || {};
+
+      options.data = options.data || {};
+      options.type = options.type || 'get';
+      options.dataType = options.dataType || 'text';
+
+      //实例化
+      let xhr = new XMLHttpRequest();
+
+      //处理请求的数据
+      let arr = [];
+      for(let name in options.data){
+        arr.push(`${encodeURIComponent(name)}=${encodeURIComponent(options.data[name])}`);
+      }
+      //最终请求时的数据结构：
+      let strData = arr.join('&');
+
+      if(options.type.toLowerCase() == 'post'){
+        xhr.open('POST', options.url, true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.send(strData);
+      }else{
+        xhr.open('GET', options.url + '?' + strData);
+        xhr.send();
+      }
+
+      //接收
+
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState == 4){
+          if((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
+            let data;
+            switch(options.dataType){
+              case 'json':
+                if(window.JSON && JSON.parse){
+                  data = JSON.parse(xhr.responseText)
+                }else{
+                  data = eval('(' + xhr.responseText + ')');
+                }
+                break;
+              case 'xml':
+                data = xhr.responseXML;
+                break;
+              default:
+                data = xhr.responseText;
+                break;
+            }
+            options.success && options.success(data);
+          }else{
+            options.error && options.error();
+          }
+        }
+      }
+    }
+
+    document.getElementById('btn1').onclick = function(){
+      ajax({
+        url: '2.php',
+        type: 'post',
+        dataType: 'json',
+        data: {
+          a: 12,
+          b: 7
+        },
+        success(data){
+          alert('成功'+data);
+        },
+        error(){
+          alert('失败');
+        }
+      })
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>制作react的logo</title>
+  <script src="./raphael.js" charset="utf-8"></script>
+</head>
+<body>
+  <script>
+    window.onload = function(){
+      let paper = Raphael(0, 0, 800, 600);
+      let cx = 400, cy = 300;
+      let rx = 150, ry = 50, rs = 20;
+
+
+      paper.circle(cx, cy, rs).attr('fill', '#2277da');
+      paper.ellipse(cx, cy, rx, ry).attr({'stroke-width': 12, 'stroke': 'red'});
+      paper.ellipse(cx, cy, rx, ry).attr({'stroke-width': 12, 'stroke': 'red', 'transform': 'r120'});
+      paper.ellipse(cx, cy, rx, ry).attr({'stroke-width': 12, 'stroke': 'red', 'transform': 'r-120'});
+
+      // var rect = paper.rect(0, 0, 200, 100).attr({'stroke-width': 12, 'fill': 'red'}).click(function(){
+      //   this.animate({'transform': 's2,1r30'}, 500, 'bounce');
+      // })
+
+    }
+  </script>
+</body>
+</html>

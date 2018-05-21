@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .sms_list{
+      width: 100%;
+    }
+    .sms_list li {
+      width: 100%;
+      height: 30px;
+      border-bottom: 1px solid #333;
+      line-height: 30px;
+      position: relative;
+      transition: 0.3s all ease;
+      background: white;
+    }
+    .sms_list li a.btn-del{
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 0;
+      height: 100%;
+      line-height: 30px;
+      text-align: center;
+      background: #F00;
+      color: white;
+      text-decoration: none;
+      overflow: hidden;
+      transition: 0.3s all ease;
+    }
+    .sms_list li a.btn-del span{
+      display: block;
+      width: 80px;
+    }
+  </style>
+  <script src="./hammer.js" charset="utf-8"></script>
+</head>
+<body>
+  <ul class="sms_list"></ul>
+
+  <script>
+    window.onload = function(){
+      var sms = [
+        'asdfsdfbxf多个人头是让他',
+        'sdydthdfghfghdfg',
+        'asdfsdfbxf多个人头是让他',
+        'fhdfghdtfyu',
+        'asdfsdfbxf多个人头是让他',
+        'vnmvnmbnm',
+        'asdfsdfbxf多个人头是让他',
+      ];
+      var oUl = document.querySelector('.sms_list');
+      var oBtnDelList = document.getElementsByClassName('btn-del');
+      console.log(oBtnDelList);
+
+      sms.forEach(function(txt) {
+        var oLi = document.createElement('li');
+        oLi.innerHTML = `<span>${txt}</span><a href="javascript:;" class="btn-del"><span>删除</span></a>`
+        oUl.appendChild(oLi);
+
+        var hammer = new Hammer(oLi);
+        var oBtnDel = oLi.getElementsByTagName('a')[0];
+        hammer.on('swipeleft', function(){
+          Array.from(oBtnDelList).forEach(function(btn){
+            btn.style.width = '0px';
+          })
+          oBtnDel.style.width = '80px';
+        })
+
+        hammer.on('swiperight', function(){
+          oBtnDel.style.width = '0px';
+        })
+
+        oBtnDel.onclick = function(){
+          oBtnDel.style.width = '0px';
+
+          oBtnDel.addEventListener('transitionend', function(ev){
+            oLi.style.height = '0px';
+            oLi.style.borderBottom = '0px solid #333';
+
+            ev.cancelBubble = true;
+
+            oLi.addEventListener('transitionend', function(){
+              oUl.removeChild(oLi);
+            }, false)
+          }, false)
+        }
+
+      })
+
+
+    }
+  </script>
+</body>
+</html>

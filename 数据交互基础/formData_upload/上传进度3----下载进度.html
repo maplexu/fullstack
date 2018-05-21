@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>下载进度</title>
+  <style>
+    .parent{
+      width: 300px;
+      height: 20px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+    }
+    .child{
+      width: 0;
+      height: 100%;
+      background: rgb(71, 217, 66);
+    }
+  </style>
+</head>
+<body>
+  <div class="parent">
+    <div class="child">
+
+    </div>
+  </div>
+
+  <el-form>
+    <input type="file" id="f1" multiple /><br>
+    <input type="button" id="btn1" value="提交"/>
+  </el-form>
+
+  <script>
+    window.onload = function(){
+      let oF = document.getElementById('f1');
+      let oBtn = document.getElementById('btn1');
+      let oChild = document.querySelector('.child');
+
+      oBtn.onclick = function(){
+        let data = new FormData();
+
+        Array.from(oF.files).forEach(file => {
+          data.append('f1', file);
+        })
+
+        let xhr = new XMLHttpRequest();
+
+        xhr.open('POST', 'http://localhost:8080/api', true);
+
+        //监控下载进度
+        xhr.addEventListener('progress', function(ev){
+          console.log(ev);
+        }, false);
+        //这里不需要设置Content-type头了，因为在传formData对象数据时，无论设不设置，都会采用multipart/form-data的方式去解析
+        xhr.send(data);
+
+        xhr.onreadystatechange = function(){
+          if(xhr.readyState == 4){
+            if((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
+              alert('成功');
+            }else{
+              alert('失败');
+            }
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>

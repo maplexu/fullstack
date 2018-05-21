@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>localStorage实现草稿保存</title>
+</head>
+<body>
+  <textarea name="" id="txt1" cols="80" rows="28"></textarea>
+  <input type="button" name="" value="发送" id="btn1" />
+
+  <script>
+    window.onload = function(){
+      let oTxt = document.getElementById('txt1');
+      let oBtn = document.getElementById('btn1');
+
+
+      oTxt.value = localStorage.tmp_txt || '';
+
+      oTxt.oninput = function(){
+        localStorage.tmp_txt = oTxt.value;
+      }
+      oBtn.onclick = function(){
+        alert('发送完成');
+
+        delete localStorage.tmp_txt;
+      }
+    }
+  </script>
+</body>
+</html>

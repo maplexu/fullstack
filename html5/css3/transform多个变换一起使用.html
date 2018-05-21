@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    .box{
+      width: 200px;
+      height: 200px;
+      background: #ccc;
+      margin: 100px auto 0;
+      transition: 1s ease all;
+    }
+    .box:active{
+      transform: rotate(45deg) scale(2, 1);
+    }
+    .box2:active{
+      transform: scale(2, 1) rotate(45deg);
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    放置一些文字
+  </div>
+  <div class="box box2">
+    放置一些其他的文字
+  </div>
+</body>
+</html>

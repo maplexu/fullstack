@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./d3.js" charset="utf-8"></script>
+</head>
+<body>
+  <script>
+    window.onload = function(){
+      d3.queue()
+        .defer((a, b, cb)=>{
+          setTimeout(function (){
+            cb(null, a+b);
+          }, Math.floor(Math.random()*4000));
+        }, 12, 5)
+
+        .defer((a, b, cb)=>{
+          setTimeout(function (){
+            cb(null, a/b);
+          }, Math.floor(Math.random()*4000));
+        }, 22, 35)
+
+        .await((err, res1, res2)=>{
+          if(err){
+            alert('错了');
+          }else{
+            console.log(res1, res2);
+          }
+        });
+    }
+  </script>
+</body>
+</html>

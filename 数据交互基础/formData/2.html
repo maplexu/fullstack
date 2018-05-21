@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>formData实现普通数据交互</title>
+</head>
+<body>
+  <form action="">
+    用户： <input type="text" id="user" /><br>
+    密码： <input type="password" id="pass" /><br>
+    <input type="button" value="提交" id="btn1">
+  </form>
+
+
+  <script>
+    //示例----原来的普通方式实现ajax请求：
+    window.onload = function(){
+      let oUser = document.getElementById('user');
+      let oPass = document.getElementById('pass');
+      let oBtn = document.getElementById('btn1');
+
+      oBtn.onclick = function(){
+        let data = new FormData();
+
+        data.set('user', oUser.value);
+        data.set('pass', oPass.value);
+
+        let xhr = new XMLHttpRequest();
+
+        //处理GET请求：
+        let arr = [];
+        data.forEach((value, key) => {
+          arr.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
+        });
+        xhr.open('GET', `http://localhost:8080/api?${arr.join('&')}`, true);
+        xhr.send();
+
+        //处理post请求
+        // xhr.open('POST', 'http://localhost:8080/api', true);
+        // //xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        // xhr.send(data);
+
+        xhr.onreadystatechange = function(){
+          if(xhr.readyState == 4){
+            if((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
+              alert('成功：' + xhr.responseText);
+            }else{
+              alert('失败');
+            }
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>

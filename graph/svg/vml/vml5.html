@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v="urn:schemas-microsoft-com:vml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <style>
+    v\:* {
+      behavior: url(#default#VML);
+      position: absolute;
+    }
+  </style>
+  <title>Document</title>
+</head>
+<body>
+  <button id="btn1">按钮</button>
+
+  <script>
+    window.onload = function(){
+      var oBtn = document.getElementById('btn1');
+
+      oBtn.onclick = function(){
+        var oShape = document.createElement('v:shape');
+
+        oShape.style.width = '1000px';
+        oShape.style.height = '1000px';
+
+        oShape.path = 'M 100 100 L 300 500 400 100 X';
+        oShape.strokecolor = 'red';
+
+        document.body.appendChild(oShape);
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>短信列表（改进）</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    html, body{
+      height: 100%;
+    }
+    .sms{
+      height: 100%;
+      overflow: hidden;
+    }
+    #sms_list{
+      width: 100%;
+      transform: translateY(0px);
+    }
+    #sms_list li{
+      position: relative;
+      width: 100%;
+      height: 50px;
+      line-height: 50px;
+      border-bottom: 1px solid #333;
+      background: white;
+      transition: all 0.3s ease;
+    }
+    #sms_list li a.btn-del{
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 0;
+      height: 100%;
+      line-height: 50px;
+      background: #F00;
+      color: #FFF;
+      text-align: center;
+      text-decoration: none;
+    }
+    #sms_list li a.btn-del span{
+      display: block;
+      width: 100%;
+      min-width: 60px;
+    }
+  </style>
+  <script src="./hammer.js" charset="utf-8"></script>
+</head>
+<body>
+  <div class="sms">
+    <ul id="sms_list">
+
+    </ul>
+  </div>
+
+  <script>
+    window.onload = function(){
+      //列表内容：
+      var sms = [
+        'asdfsdfbxf多个人头是让他',
+        'vnmvnmbnm',
+        'asdfsdfbxf多个人头是让他',
+        'asdfsdfbxf多个人头是让他',
+        'sdydthdfghfghdfg',
+        'asdfsdfbxf多个人头是让他',
+        'fhdfghdtfyu',
+        'asdfsdfbxf多个人头是让他',
+        'vnmvnmbnm',
+        'asdfsdfbxf多个人头是让他',
+        'asdfsdfbxf多个人头是让他',
+        'sdydthdfghfghdfg',
+        'asdfsdfbxf多个人头是让他',
+        'fhdfghdtfyu',
+        'asdfsdfbxf多个人头是让他',
+        'vnmvnmbnm',
+        'asdfsdfbxf多个人头是让他',
+        'asdfsdfbxf多个人头是让他',
+        'sdydthdfghfghdfg',
+        'asdfsdfbxf多个人头是让他',
+        'fhdfghdtfyu',
+        'asdfsdfbxf多个人头是让他',
+      ];
+
+      var oUl = document.getElementById('sms_list');
+      var delBtnList = document.getElementsByClassName('btn-del');
+
+
+      sms.forEach(function(text){
+        var oLi = document.createElement('li');
+        oLi.innerHTML = `<span>${text}</span><a href="javascript:;" class="btn-del"><span>删除</span></a>`
+        oUl.appendChild(oLi);
+
+
+        //获取当前行的删除按钮
+        var oDelBtn = oLi.getElementsByTagName('a')[0];
+
+        var hammer = new Hammer(oLi);
+
+        //实时记录删除按钮的宽度
+        var delW = 0;
+        //记录滑动开始时删除按钮的宽度（有该参数的参考，才能准确变化删除按钮的宽度）
+        var start_delW;
+
+        //记录滑动开始的位置点坐标：
+        var start_x;
+        var start_y;
+
+        //记录滑动的方向：
+        var dir = '';
+
+        hammer.on('panstart', function(ev){
+          //清除删除按钮上的transition属性
+          oDelBtn.style.transition = 'none';
+
+          start_x = ev.center.x;
+          start_y = ev.center.y;
+
+          dir = '';
+          start_delW = delW;
+        });
+
+        hammer.on('panmove', function(ev){
+          //判断当前的滑动方向是否已经确定了
+          if(dir == ''){
+            if(Math.abs(start_x - ev.center.x) >= 5){
+              dir = 'x';
+            }else if(Math.abs(start_y - ev.center.y) >= 5){
+              dir = 'y';
+            }
+          }else{
+            if(dir == 'x'){
+              //如果是横向滑动
+
+              //在左滑时将其他行的删除按钮缩回去，只将本行的删除按钮出现：
+              if((start_x - ev.center.x) > 0){
+                Array.from(delBtnList).forEach(function(btn){
+                  if(btn !== oDelBtn){
+                    btn.style.transition = 'all 0.6s ease';
+                    btn.style.width = '0px';
+                    //注意：
+                  }
+                })
+              }
+
+              //删除按钮的宽度就根据横向滑动的距离来决定：
+              var w = start_delW + start_x - ev.center.x;
+              //在不同的宽度情况下，决定删除按钮不同的变化形式（宽<80px： 宽度随滑动距离等效变化；宽>80px：宽度变化幅度小于滑动的幅度）
+              if(w < 80){
+                oDelBtn.style.width = w + 'px';
+              }else{
+                oDelBtn.style.width = 80 + (w - 80)/6 + 'px';
+              }
+
+              //记录删除按钮的宽度（不断变化的）
+              delW = w;
+            }else{
+              //纵向滑动的处理（hammer对纵向滑动的处理有点问题：待续）
+              //...
+            }
+          }
+        });
+
+        hammer.on('panend', function(ev){
+          oDelBtn.style.transition = 'all 0.3s ease';
+          if(delW >= 40){
+            oDelBtn.style.width = '80px';
+            delW = 80;
+          }else{
+            oDelBtn.style.width = '0px';
+            delW = 0;
+          }
+
+
+          function fnEnd(ev){
+            ev.stopPropagation();
+            oDelBtn.style.transition = 'none';
+            oDelBtn.removeEventListener('transitionend', fnEnd, false);
+          }
+          oDelBtn.addEventListener('transitionend', fnEnd, false);
+        })
+
+        oDelBtn.onclick = function(){
+          oDelBtn.style.transition = 'all 0.3s ease';
+          oDelBtn.style.width = '0px';
+
+          oDelBtn.addEventListener('transitionend', function(ev){
+            ev.stopPropagation();
+            oLi.style.height = '0px';
+            oLi.style.borderBottom = '0px solid #333';
+          }, false);
+
+          //注意：上面有几个要transition的属性，该transitionend事件就会触发几次
+          oLi.addEventListener('transitionend', function(){
+            //因为可能会触发多次，需要先判断ul中是否还有该li再去决定删除li
+            if(Array.from(oUl.children).indexOf(oLi) !== -1){
+              oUl.removeChild(oLi);
+            }
+          }, false)
+        }
+      })
+    }
+  </script>
+</body>
+</html>

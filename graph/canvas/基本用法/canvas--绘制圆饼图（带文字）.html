@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    body{
+      background: green;
+      text-align: center;
+    }
+    #c1{
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="c1" width="800" height="600"></canvas>
+
+  <script>
+    //定义角度和弧度的转换函数
+    //角度转换为弧度
+    function d2r(n){
+      return n*Math.PI/180;
+    }
+    //弧度转换为角度
+    function r2d(n){
+      return n*180/Math.PI;
+    }
+
+    window.onload = function(){
+      var oC = document.getElementById('c1');
+      var gd = oC.getContext('2d');
+
+      var center = {
+        x: 300,
+        y: 300,
+        r: 200
+      }
+      var data = [
+        {num: 300, color: '#FCO', name: '张三'},
+        {num: 200, color: '#CF0', name: '李四'},
+        {num: 20, color: "#0FC", name: '王五'}
+      ]
+
+
+      function pie(start_ang, end_ang, color, name){
+        gd.beginPath();
+        //从圆心出发
+        gd.moveTo(center.x, center.y);
+        //记录圆弧上初始点的位置
+        var x = center.x + Math.cos(d2r(start_ang))*center.r;
+        var y = center.y + Math.sin(d2r(start_ang))*center.r;
+        //下一个点的位置
+        gd.lineTo(x, y)
+        //第三部分是一段圆弧（初始角度位置处的点顺时针到结束角度位置处的点）
+        gd.arc(center.x, center.y, center.r, d2r(start_ang), d2r(end_ang), false);
+        //最后闭合路径
+        gd.closePath();
+        gd.fillStyle=color;
+        gd.fill();
+
+
+        var txt_x = center.x + Math.cos(d2r((start_ang + end_ang)/2))*center.r/2;
+        var txt_y = center.y + Math.sin(d2r((start_ang + end_ang)/2))*center.r/2;
+
+        gd.beginPath();
+        gd.fillStyle = 'red';
+        gd.fillText(name, txt_x, txt_y);
+        // //gd.fillText('你好啊', 500, 500);
+      }
+
+      // pie(0, 30, 'red');
+      // pie(30, 150, 'blue');
+      // pie(150, 360, 'green');
+      //计算总数
+      var sum = 0;
+      data.forEach(function(data){
+        sum += data.num;
+      })
+      //给每一部分按比例分配角度
+      var now = 0;    //记录之前的内容占的角度
+      data.forEach(function(data){
+        var ang = 360*data.num/sum;
+        pie(now, now+ang, data.color, data.name);
+
+        now+=ang;
+      })
+
+    }
+  </script>
+</body>
+</html>

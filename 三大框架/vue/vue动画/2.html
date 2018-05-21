@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="vue.js" charset="utf-8"></script>
+    <style media="screen">
+    .box {width:300px; height:100px; background:#CCC; border:1px solid black;}
+
+    .slide-enter {height:0; opacity:0}
+    .slide-enter-active {transition:.6s all ease}
+    .slide-enter-to {height:100px; opacity:1}
+
+    .slide-leave {height:100px; opacity:1}
+    .slide-leave-active {transition:.6s all ease}
+    .slide-leave-to {height:0; opacity:0}
+    </style>
+</head>
+<body>
+  <div id="div1">
+    <input type="button" v-for="json,index in arr" :key="index" :value="'显示隐藏'+index" @click="fn(index)" />
+    <transition-group name="slide">
+        <div class="box" v-for="json,index in arr" :key="index" v-if="json.show">{{index}}</div>
+    </transition-group>
+  </div>
+
+  <script>
+    window.onload = function(){
+      new Vue({
+        el: '#div1',
+        data: {
+          arr: [
+            {show: true},
+            {show: true},
+            {show: true},
+            {show: true}
+          ]
+        },
+        methods: {
+          fn(index){
+            this.arr[index].show = !this.arr[index].show;
+          }
+        }
+      })
+    }
+  </script>
+</body>
+</html>

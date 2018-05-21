@@ -1,0 +1,2 @@
+<!--pages/detail/detail.wxml-->
+<text>detail: {{id}}</text>

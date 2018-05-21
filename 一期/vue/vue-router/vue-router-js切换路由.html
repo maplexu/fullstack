@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="vue.js" charset="utf-8"></script>
+  <script src="vue-router.js" charset="utf-8"></script>
+</head>
+<body>
+  <div id="div1">
+    <input type="button" name="" value="<-后退" @click="fn_forward">
+    <input type="button" name="" value="前进->" @click="fn_back">
+    <input type="button" name="" value="进入user" @click="fn_push">
+    <router-view></router-view>
+  </div>
+
+  <script>
+    window.onload = function(){
+
+      //1.声明路由
+      let r1 = new VueRouter({
+        routes: [
+          {path: '/user/:id', component: {template: '<div>用户列表{{$route.params.id}}</div>'}},
+          {path: '/article', component: {template: '<div>文章列表</div>'}},
+          {path: '/comment', component: {template: '<div>留言列表</div>'}}
+        ]
+      });
+      //2.调用路由
+      let vm = new Vue({
+        el: '#div1',
+        router: r1,
+        methods: {
+          fn_forward(){
+
+            this.$router.go(1);
+          },
+          fn_back(){
+            this.$router.go(-1);
+          },
+          fn_push(){
+            console.log(this.$router);
+            console.log(this.$route);
+            this.$router.push('/user/111');
+          }
+        }
+      });
+
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    #parent {
+      width: 200px;
+      height: 200px;
+      background: #ccc;
+      margin: 150px auto 0;
+      transform: scale(1);
+      transition: 1s all ease;
+    }
+    #parent:active{
+      transform: scale(2);
+    }
+    #parent:active #child{
+      transform: rotate(60deg);
+      width: 200px;
+      height: 300px;
+    }
+    #child {
+      width: 100px;
+      height: 100px;
+      background: red;
+      transform: rotate(0deg);
+      transition: all 0.3s ease;
+    }
+
+  </style>
+</head>
+<body>
+  <div id="parent">
+    <div id="child"></div>
+  </div>
+
+  <script>
+    window.onload = function(){
+      var parent = document.getElementById('parent');
+      var child = document.getElementById('child');
+
+      function fnTransition(ev){
+        console.log('parent的transitionend');
+        // parent.removeEventListener('transitionend', fnTransition, false);
+      }
+      parent.addEventListener('transitionend', fnTransition, false)
+      child.addEventListener('transitionend', function(ev){
+        ev.stopPropagation();
+        console.log('child的transitionend');
+      }, false)
+    }
+  </script>
+</body>
+</html>

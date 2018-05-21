@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>原生实现websocket</title>
+</head>
+<body>
+  <script>
+    let sock = new WebSocket('ws://localhost:8080/');
+
+    //封装一个sock.emit函数
+    sock.emit = function(name, ...args){
+      alert(JSON.stringify({name, data: [...args]}));
+      sock.send(JSON.stringify({name, data: [...args]}));
+    }
+
+    //连接
+    sock.onopen = function(){
+      alert('连接上了');
+
+      sock.emit('msg', 12, 5);
+    }
+
+    //有数据
+    sock.onmessage = function(){
+      alert('有消息过来了');
+
+    };
+
+    //断开了：
+    sock.onclose = function(){
+      alert('断了');
+    }
+  </script>
+</body>
+</html>

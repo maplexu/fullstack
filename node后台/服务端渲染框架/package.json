@@ -1,0 +1,8 @@
+{
+  "name": "",
+  "version": "",
+  "devDependencies": {
+    "ejs": "^2.5.8",
+    "pug": "^2.0.3"
+  }
+}

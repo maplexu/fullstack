@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="d3.js" charset="utf-8"></script>
+    <script>
+    window.onload=function (){
+      let oC=document.getElementById('c1');
+      let gd=oC.getContext('2d');
+      let W=oC.width,H=oC.height;
+
+      //
+      let nodes=[
+        {name: 'aaa', title: '张三'},
+        {name: 'bbb', title: 'blue'},
+        {name: 'ccc', title: '李四'},
+      ];
+
+      let links=[
+        {source: 'aaa', target: 'bbb', dis: 400},
+        {source: 'bbb', target: 'ccc', dis: 200},
+        {source: 'ccc', target: 'aaa', dis: 300},
+      ];
+
+      //
+      let link=d3.forceLink(links)
+        .id(node=>node.name)
+        .distance(link=>link.dis);
+
+      let sim=d3.forceSimulation()
+        .nodes(nodes)
+        .force('link', link)
+        .force('charge', d3.forceManyBody())
+        .force('center', d3.forceCenter(W/2, H/2));
+
+      sim.on('tick', ()=>{
+        //console.log(nodes.map(json=>[json.x, json.y].join(' ')));
+
+        gd.clearRect(0,0,W,H);
+
+        //画点
+        nodes.forEach(node=>{
+          gd.beginPath();
+          gd.arc(node.x, node.y, 4, 0, Math.PI*2, true);
+          gd.fill();
+
+          gd.font='20px 宋体';
+          gd.fillText(node.title, node.x, node.y);
+        });
+
+        //画线
+        links.forEach(link=>{
+          gd.beginPath();
+          gd.moveTo(link.source.x, link.source.y);
+          gd.lineTo(link.target.x, link.target.y);
+          gd.stroke();
+        });
+      });
+    };
+    </script>
+  </head>
+  <body>
+    <canvas id="c1" width="800" height="600"></canvas>
+  </body>
+</html>

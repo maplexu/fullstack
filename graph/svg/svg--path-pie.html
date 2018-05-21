@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>svg绘制饼图</title>
+</head>
+<body>
+  <svg width="800" height="600">
+    <path id="p1" style="stroke: red; fill: blue"></path>
+  </svg>
+
+  <script>
+    function d2r(n){
+      return n*Math.PI/180;
+    }
+    window.onload = function(){
+      var oP = document.getElementById('p1');
+      var arr = [];    //用于存储图形命令
+      var cx = 400, cy = 300, r = 200;  //定义饼图的圆形和半径
+      var ang1 = 20, ang2 = 360;        //定义饼图的初始和结束角度
+
+      //根据角度值计算点在圆上的坐标
+      function getPoint(ang){
+        return {
+          x: cx + Math.sin(d2r(ang))*r,
+          y: cy - Math.cos(d2r(ang))*r
+        }
+      }
+      //1. 从圆心出发
+      arr.push(`M ${cx} ${cy}`);
+      //2. 到圆上的第一个点连（直）线
+      var { x: x1, y: y1 } = getPoint(ang1);
+      arr.push(`L ${x1} ${y1}`)
+      //3.圆上的两个点之间的弧线
+      var { x: x2, y: y2 } = getPoint(ang2);
+      //注意： 这里需要根据饼图的角度大写来决定这里的弧是大弧还是小弧
+      var juggSize = ang2 - ang1 > 180 ? 1 : 0;
+      arr.push(`A ${r} ${r} 0 ${juggSize} 1 ${x2} ${y2}`);
+      //4. 闭合
+      arr.push('Z');
+
+      console.log(arr.join(' '));
+
+      oP.setAttribute('d', arr.join(' '));
+    }
+  </script>
+</body>
+</html>

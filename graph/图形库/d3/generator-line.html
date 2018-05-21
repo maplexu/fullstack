@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./d3.js" charset="utf-8"></script>
+</head>
+<body>
+  <script>
+    window.onload = function(){
+      let datas = [
+        {name: '1月', value: 2180},
+        {name: '2月', value: 1750},
+        {name: '3月', value: 968},
+        {name: '4月', value: 3560}
+      ]
+
+      //1.创建generator
+      let line = d3.line()
+      .x(json => parseInt(json.name)*50)
+      .y(json => json.value/20)
+
+      //2.diaoy 创建generator
+      let res = line(datas);
+
+
+      //3.显示
+      d3.select('body').append('svg')
+      .attr('width', 800)
+      .attr('height', 600)
+      .append('path')
+      .attr('d', res)
+      .attr('stroke', 'black')
+      .attr('fill', 'none')
+    }
+  </script>
+</body>
+</html>

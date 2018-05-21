@@ -1,0 +1,8 @@
+(err, data) => {
+      if(err){
+        res.write('404');
+      }else{
+        res.write(data);
+      }
+      res.end();
+    }
